@@ -7,7 +7,7 @@
                 <p class="btn-text text-light" id='nav-card'>Sign In Here</p>
                 <hr>
             </div>
-            <small class="text-danger m-5" v-if="error_info.errors_login">{{error_info.errors_login}}</small>
+            <small class="text-danger m-5" v-if="error_info_signin.errors_login">{{error_info_signin.errors_login}}</small>
             <div class="form-group">
                 <input 
                     type="email"
@@ -38,7 +38,7 @@
 <script>
 export default {
     emits: ['signIn'],
-    inject: ['error_info'],
+    inject: ['error_info_signin'],
 
     data() {
       return {

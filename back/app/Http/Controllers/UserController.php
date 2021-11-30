@@ -12,8 +12,12 @@ class UserController extends Controller
     public function register(Request $request)
     {
         $request->validate([
-            'password' =>'required|confirmed'
+            "first_name" => "min:1|max:10",
+            "last_name" => "min:1|max:10",
+            "email" => ['email', 'unique:users'],
+            "password" => ['min:4', 'confirmed']
         ]);
+
         //create user
         $user = new User();
         $user->first_name = $request->first_name;
