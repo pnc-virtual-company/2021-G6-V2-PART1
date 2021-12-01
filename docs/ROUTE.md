@@ -24,6 +24,7 @@
 | DELETE      | /category/{id}      |The route to delete a category|
 
 ### 3. Update the route frontend category
+
 routes: [
     {path: | '/category', | component: CategoryView},
 ]
