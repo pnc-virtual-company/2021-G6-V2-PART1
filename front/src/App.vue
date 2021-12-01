@@ -96,16 +96,17 @@ export default {
 
       axios.post(url+'login', contain_login_info)
       .then(response =>{
-        if(response.data.message !== 'undefinded'){
+        if(response.data.message !== 'undefinde'){
           this.errorSignin.errors_login = response.data.message;
         }
-        console.log(response.data);
+         console.log(response.data);
+        
       })
-      .catch((error) => {
-        this.errorSignin.email_error = error.response.data.errors.email;
-        this.errorSignin.password_error = error.response.data.errors.password;
-        console.log(error.response.data.errors);
-      })
+      // .catch((error) => {
+      //   this.errorSignin.email_error = error.response.data.errors.email;
+      //   this.errorSignin.password_error = error.response.data.errors.password;
+      //   console.log(error.response.data.errors);
+      // })
 
       loginInfo.email = "";
       loginInfo.password = "";
