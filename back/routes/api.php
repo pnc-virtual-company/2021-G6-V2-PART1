@@ -23,14 +23,4 @@ Route::get('users/{id}', [UserController::class, 'show']);
 Route::delete('users/{id}', [UserController::class, 'destroy']);
 
 
-
-//-------------- Private Route ------------------------------
-// Route::group(['middleware' => ['auth:sanctum']], function() {
-//     Route::post('events', [PostController::class, 'store']);
-//     Route::put('events/{id}', [PostController::class, 'update']);
-//     Route::delete('events/{id}', [PostController::class, 'destroy']);
-
-//     Route::post('logout', [UserController::class, 'logout']);
-// });
-
 Route::post('logout', [UserController::class, 'logout']);

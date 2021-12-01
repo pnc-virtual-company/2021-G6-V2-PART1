@@ -6,7 +6,7 @@
 
 | HTTP REQUEST| ROUTES | DESCRIPTION |
 | :---        | :----  |       :--- |
-| POST        | /signup        |  The route to signup the user |
+| POST        | /register        |  The route to signup the user |
 | POST        | /signin        |  The route to signin the user |
 | POST        | /logout        |  The route to logout the user |
 
@@ -19,9 +19,9 @@
 ### 1. [Sign-in/signup route for frontend]
 
 routes: [
-    {path: | '/signup', | component: SignupView},
-    {path: | '/signin', | component: SigninView},
-    {path: | '/logout', | component: LogoutView}
+    {path: | '/signup', | component: Signup},
+    {path: | '/signin', | component: Signin},
+    {path: | '/logout', | component: Logout}
 ]
 
 
