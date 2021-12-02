@@ -70,4 +70,8 @@ class CategoryController extends Controller
     {
         return Category::destroy($id);
     }
+
+    public function search($name) {
+        return Category::where('name','like', '%'. $name . '%')->get();
+    }
 }
