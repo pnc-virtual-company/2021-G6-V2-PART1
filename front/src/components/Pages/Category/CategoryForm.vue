@@ -7,7 +7,7 @@
       data-toggle="modal"
       data-target="#myModal"
     >
-      Open modal
+     + Create Category
     </button>
 
     <!-- The Modal -->
@@ -22,11 +22,15 @@
           </div>
 
           <!-- Modal body -->
-          <div class="modal-body">
-              <input type="text" class="form-control" placeholder="Event category" v-model="namecategory">
-          </div>
+          <form >
+            <div class="modal-body">
+              <input type="text" class="form-control" placeholder="Event category" >
+            </div>
+          </form>
+          
 
           <!-- Modal footer -->
+         
           <div class="modal-footer" id="btn-create">
             <button type="button" class="btn btn-block" @click="createCategory">Create</button>
           </div>
@@ -38,14 +42,26 @@
 <script>
 // const url = "http://localhost:8000/";
 export default {
+   
     data() {
       return {
-        categories: [],
-        namecategory: "",
+        
       };
+    },
+    methods: {
+      
     },
 };
 </script>
+
+
+
+
+
+
+
+
+
 <style scoped>
 h4 {
     color: #020269;
@@ -53,6 +69,7 @@ h4 {
 #btn-create button {
   background: #020269;
   color: white;
+  
 }
 .btn-circle.btn-xl {
     width: 70px;
@@ -71,6 +88,11 @@ h4 {
     text-align: center;
     font-size: 12px;
     line-height: 1.42857;
+}
+button{
+  padding:10px;
+  
+  
 }
 
 </style>
