@@ -1,9 +1,9 @@
 <template>
-    <category-form></category-form>
+    <category-view></category-view>
 </template>
 <script>
 export default {
-  
+    
 }
 </script>
 <style lang="">
