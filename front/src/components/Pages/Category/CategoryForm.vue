@@ -7,7 +7,7 @@
       data-toggle="modal"
       data-target="#myModal"
     >
-      Open modal
+     Add Card
     </button>
 
     <!-- The Modal -->
