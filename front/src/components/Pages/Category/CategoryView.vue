@@ -156,7 +156,7 @@ export default {
 */ .has-search input {
   border-radius: 40px;
 }
-#btn-search {
+#btn-search { 
   background: #020269;
 }
 #border {
