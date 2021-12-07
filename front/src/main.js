@@ -4,11 +4,15 @@ import CategoryForm from './components/Pages/Category/CategoryForm.vue';
 import CategoryView from './components/Pages/Category/CategoryView.vue';
 import CategoryCard from './components/Pages/Category/CategoryCard.vue';
 
+import MyEventCard from './components/Pages/myevent/MyEventCard';
+
 const app = createApp(App);
 
 app.component('category-form', CategoryForm);
 app.component('category-view', CategoryView);
 app.component('category-card', CategoryCard);
 
-app.mount('#app')
 
+
+app.component('my-event-card', MyEventCard);
+app.mount('#app');
