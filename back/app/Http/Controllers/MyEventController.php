@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use App\Models\MyEvent;
 class MyEventController extends Controller
 {
@@ -11,44 +12,48 @@ class MyEventController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function getEvent()
     {
         return MyEvent::latest()->get();
     }
-
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function createEvent(Request $request)
     {
         $request->validate([
-            'title'=>'required',
-            "StartDate" => "required",
-            "EndDate"=> "required",
-            "image" => "required|image|mimes:jpg,jpeg,png|max:1999",
+            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:1999',
+            'title' => 'required',
+            'description' => 'required',
+            'city' => 'required',
+            'stat_date' => 'required|before:end_date',
+            'end_date' => 'required|after:start_date',
         ]);
-        // Move image to storage folder  
-        $request->file('image')->storeAs('public/images');
-        // insert in to database 
-        $myevent = new MyEvent();
-        $myevent->title = $request->title;
-        $myevent->StartDate = $request->startDate;
-        $myevent->EndDate = $request->EndDate;
-        $myevent->image = $request->file("image")->hashName();
-        $myevent->save(); 
-        return response()->json(["message" => "data" -> $myevent],201);
-    } 
 
+        $request->file('image')->store('public/images/profiles');    
+
+        $myevent = new MyEvent();
+        $myevent->category_id = $request->category_id;
+        $myevent->image = $request->image;
+        $myevent->image = $request->file('image')->getClientOriginalName();
+        $myevent->title = $request->title;
+        $myevent->description = $request->description;
+        $myevent->city = $request->city;
+        $myevent->start_date = $request->start_date;
+        $myevent->end_date = $request->end_date;
+        $myevent->save();
+        return response()->json(["message" => "Created", 'data'=>$myevent],201);
+    } 
     /**
      * Display the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function getOneEvent($id)
     {
         return MyEvent::findOrFail($id);
     }
@@ -60,24 +65,33 @@ class MyEventController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function updateEvent(Request $request, $id)
     {
+       
         $request->validate([
-            'title'=>'required',
-            "StartDate" => "required",
-            "EndDate"=> "required",
-            "image" => "required|image|mimes:jpg,jpeg,png|max:1999",
+            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:19999',
+            'title' => 'required',
+            'description' => 'required',
+            'stat_date' => 'required|before_or_equal:end_date',
+            'end_date' => 'required|after_or_equal:start_date',
+            'stat_time' => 'required|before:end_time',
+            'end_time' => 'required|after:start_time'
         ]);
-        // Move image to storage folder  
-        $request->file('image')->storeAs('public/images');
-        // insert in to database 
+
+        $request->file('image')->store('public/images/profile');    
+
         $myevent = MyEvent::findOrFail($id);
+        $myevent->category_id = $request->category_id;
+        $myevent->image = $request->image;
+        $myevent->image = $request->file('image')->hashName();
         $myevent->title = $request->title;
-        $myevent->StartDate = $request->startDate;
-        $myevent->EndDate = $request->EndDate;
-        $myevent->image = $request->file("image")->hashName();
-        $myevent->save(); 
-        return response()->json(["message" => "data" -> $myevent ],200);
+        $myevent->description = $request->description;
+        $myevent->start_date = $request->start_date;
+        $myevent->end_date = $request->end_date;
+        $myevent->start_time = $request->start_time;
+        $myevent->end_time = $request->end_time;
+        $myevent->save();
+        return response()->json(["message" => "Created", 'data'=>$myevent],201);
     }
 
     /**
@@ -86,8 +100,13 @@ class MyEventController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroyEvent($id)
     {
-        return MyEvent::destroy($id);
+        $isDeleted = MyEvent::destroy($id);
+        if($isDeleted === 1){
+            return response()->json(["message" => "Event deleted success", 'data'=>$myevent],200);
+        }else{
+            return response()->json(["message" => "ID not found", 'data'=>$myevent],401);
+        }
     }
 }
