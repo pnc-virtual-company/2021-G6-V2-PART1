@@ -19,7 +19,7 @@
 
       <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
         <ul class="navbar-nav m-auto mt-2 mt-lg-0">
-          <!-- <li class="nav-item active">
+          <li class="nav-item active">
             <router-link to="/home" class="nav-link text-white menu-page">Home <span class="sr-only ">(current)</span></router-link>
           </li>
           <li class="nav-item">
@@ -30,10 +30,6 @@
           </li>
           <li class="nav-item">
             <router-link to="/category" class="nav-link text-white menu-page">Category</router-link>
-          </li> -->
-
-          <li class="nav-item" v-for="(menu, index) of menuList" :key="index">
-            <router-link :to="menu.url" class="nav-link text-white menu-page"> {{menu.title}} </router-link>
           </li>
 
         </ul>
@@ -47,7 +43,7 @@
 
 <script>
 export default {
-  inject: ['menuList']
+
 };
 </script>
 

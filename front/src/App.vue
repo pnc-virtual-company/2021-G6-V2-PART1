@@ -14,12 +14,6 @@ const url = 'http://127.0.0.1:8000/api/';
 export default {
   data() {
     return {
-      menuList: [
-        {title: "Home", url: "/home"},
-        {title: "My Event", url: "/my-event"},
-        {title: "Find Event", url: "/find-event"},
-        {title: "Category", url: "/category"},
-      ],
       containUsers: [],
       errorSignUp: {
         firtnameError: null,

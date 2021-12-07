@@ -27,12 +27,10 @@ class UserController extends Controller
 
         $user->save();
 
-        //create token is a key can access to api
-        // $token = $user->createToken('mytoken')->plainTextToken;
 
         return response()->json([
+            'message' => "Registered",
             'user' => $user,
-            // 'token' => $token,
         ]);
     }
 
@@ -49,14 +47,12 @@ class UserController extends Controller
 
         //check password
         if(!$user || !Hash::check($request->password, $user->password)){
-            return response()->json(['message' => 'Bad login'], 401);
+            return response()->json(['message' => 'fail'], 401);
         }
-        //create token is a key can access to api
-        // $token = $user->createToken('mytoken')->plainTextToken;
 
         return response()->json([
+            "message" => "logined",
             'user' => $user,
-            // 'token' => $token,
         ]);
     }
     
