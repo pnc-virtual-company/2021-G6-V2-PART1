@@ -103,10 +103,6 @@ export default {
 </script>
 
 <style scoped>
-body {
-    background-size: cover;
-    background-position: center center;
-}
 
 .contain-body {
     background: url('../../assets/lastImg.jpg');

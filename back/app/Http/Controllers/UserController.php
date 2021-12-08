@@ -41,13 +41,13 @@ class UserController extends Controller
     }
     
     public function login(Request $request)
-    {
+    { 
         //check email
         $user = User::where('email', $request->email)->first();
 
         //check password
         if(!$user || !Hash::check($request->password, $user->password)){
-            return response()->json(['message' => 'fail'], 401);
+            return response()->json(['message' => false]);
         }
 
         return response()->json([
