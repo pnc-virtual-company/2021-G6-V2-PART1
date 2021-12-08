@@ -29,8 +29,9 @@ class MyEventController extends Controller
             'title' => 'required',
             'description' => 'required',
             'city' => 'required',
-            'stat_date' => 'required|before:end_date',
+            'start_date' => 'required|before:end_date',
             'end_date' => 'required|after:start_date',
+            
         ]);
 
         $request->file('image')->store('public/images/profiles');    
@@ -44,6 +45,7 @@ class MyEventController extends Controller
         $myevent->city = $request->city;
         $myevent->start_date = $request->start_date;
         $myevent->end_date = $request->end_date;
+        
         $myevent->save();
         return response()->json(["message" => "Created", 'data'=>$myevent],201);
     } 
@@ -72,10 +74,9 @@ class MyEventController extends Controller
             'image' => 'nullable|image|mimes:jpg,jpeg,png|max:19999',
             'title' => 'required',
             'description' => 'required',
-            'stat_date' => 'required|before_or_equal:end_date',
+            'start_date' => 'required|before_or_equal:end_date',
             'end_date' => 'required|after_or_equal:start_date',
-            'stat_time' => 'required|before:end_time',
-            'end_time' => 'required|after:start_time'
+            
         ]);
 
         $request->file('image')->store('public/images/profile');    
@@ -88,10 +89,8 @@ class MyEventController extends Controller
         $myevent->description = $request->description;
         $myevent->start_date = $request->start_date;
         $myevent->end_date = $request->end_date;
-        $myevent->start_time = $request->start_time;
-        $myevent->end_time = $request->end_time;
         $myevent->save();
-        return response()->json(["message" => "Created", 'data'=>$myevent],201);
+        return response()->json(["message" => "Updated", 'data'=>$myevent],201);
     }
 
     /**
@@ -104,9 +103,9 @@ class MyEventController extends Controller
     {
         $isDeleted = MyEvent::destroy($id);
         if($isDeleted === 1){
-            return response()->json(["message" => "Event deleted success", 'data'=>$myevent],200);
+            return response()->json(["message" => "Event deleted success"],200);
         }else{
-            return response()->json(["message" => "ID not found", 'data'=>$myevent],401);
+            return response()->json(["message" => "ID not found"],401);
         }
     }
 }
