@@ -71,13 +71,15 @@ export default {
       axios
         .post("/login", form_data)
         .then((response) => {
-          if (response.data.message !== "logined") {
+          if (response.data.message !== "logined") { 
             this.message_error_login = true;
+            console.log('cannot login')
           } else {
             this.$router.push("/home");
             this.user = response.data.user;
             localStorage.setItem("userId", response.data.user.id);
             this.message_error_login = false;
+
           }
         });
 

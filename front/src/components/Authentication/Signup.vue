@@ -1,6 +1,7 @@
 <template>
   <section>
-    <h1 class="text-center p-4 font-weight-light">My Events Registration</h1>
+    <div class="contain-body">
+         <!-- <h1 class="text-center p-4 font-weight-light">My Events Registration</h1> -->
     <div class="form-field">
         <form action="#" @submit.prevent="addUserInfo">
             <div class="form-group inser-img">
@@ -71,6 +72,8 @@
         </form>
     </div>
     <p class="text-center mt-2">Have an account? <router-link to="/signin">Sign in</router-link></p>
+    </div>
+   
   </section>
 </template>
 
@@ -101,16 +104,29 @@ export default {
 
 <style scoped>
 body {
-    background: url('../../assets/bg-form.gif');
     background-size: cover;
     background-position: center center;
 }
+
+.contain-body {
+    background: url('../../assets/lastImg.jpg');
+    background-size: cover;
+    background-position: center center;  
+    width: auto;
+    height: 100vh;
+    padding-top: 100px;
+    
+}
 .form-field {
-  width: 40%;
+  width: 35%;
   margin: auto;
+  box-shadow: 0px 2px 16px 11px rgba(30, 48, 54, 0.67);
+  background: #e7eef0;
   border-radius: 10px;
   padding: 20px;
-  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  opacity: 0.8;
+  position: center center;
+ 
 }
 .img-icon {
     margin-left: 40px;
