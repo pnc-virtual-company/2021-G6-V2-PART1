@@ -1,10 +1,32 @@
 ## ROUTE DOCUMENTATION EXAMPLE
 
 
-### 1. Book Routes
+### 1. [Sign-in/signup route]
 ---
 
 | HTTP REQUEST| ROUTES | DESCRIPTION |
+<<<<<<< HEAD
+| :---        | :----  |       :--- |
+| POST        | /register        |  The route to signup the user |
+| POST        | /signin        |  The route to signin the user |
+| POST        | /logout        |  The route to logout the user |
+
+| GET        | /users        |  The route to get all the user |
+| GET        | /users/{id}   |  The route to get user by given id |
+| PUT        | /users/{id}   |  The route to update user by giben id|
+| DELETE     | /users/{id}   |  The route to delete user|
+
+
+### 1. [Sign-in/signup route for frontend]
+
+routes: [
+    {path: | '/signup', | component: Signup},
+    {path: | '/signin', | component: Signin},
+    {path: | '/logout', | component: Logout}
+]
+
+
+=======
 | :---        | :----   |          :--- |
 | GET         | /books       |The route for get all books   |
 | GET         | /books/{id}        |The route to get a book by given id |
@@ -29,6 +51,7 @@
 routes: [
     {path: | '/category', | component: CategoryView},
 ]
+<<<<<<< HEAD
 =======
 ### 2. update route my-event beckend
 ---
@@ -48,3 +71,6 @@ routes: [
 ]
 
 >>>>>>> e68b823e52dc8bc0121969cf55c4d4df9bf354f6
+=======
+>>>>>>> category
+>>>>>>> develop

@@ -1,18 +1,12 @@
 import { createApp } from 'vue'
 import App from './App.vue'
-import CategoryForm from './components/Pages/Category/CategoryForm.vue';
-import CategoryView from './components/Pages/Category/CategoryView.vue';
-import CategoryCard from './components/Pages/Category/CategoryCard.vue';
+import router from './router/router.js'
 
-import MyEventCard from './components/Pages/myevent/MyEventCard';
 
 const app = createApp(App);
 
-app.component('category-form', CategoryForm);
-app.component('category-view', CategoryView);
-app.component('category-card', CategoryCard);
+app.use(router);
+app.mount("#app")
 
 
 
-app.component('my-event-card', MyEventCard);
-app.mount('#app');
