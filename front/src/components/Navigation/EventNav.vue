@@ -1,9 +1,9 @@
 <template>
   <section>
-    <nav class="navbar navbar-expand-lg navbar-light nav">
+    <nav v-if="username !== null" class="navbar navbar-expand-lg navbar-light nav">
         <a class="navbar-brand text-white d-flex justify-content-center align-items-center" href="#">
             <img src="../../assets/avatar.png" width="40" height="40" class="d-inline-block align-top rounded rounded-circle mr-2" alt="">
-            Username
+            {{username.first_name}} {{username.last_name}}
         </a>
       <button
         class="navbar-toggler bg-white"
@@ -31,10 +31,9 @@
           <li class="nav-item">
             <router-link to="/category" class="nav-link text-white menu-page">Category</router-link>
           </li>
-
         </ul>
         <form class="form-inline my-2 my-lg-0">
-          <router-link to="/signin" class="btn btn-info my-2 my-sm-0">Sign Out</router-link>
+          <a href="#" class="nav-link text-white my-2 my-sm-0" @click.prevent="ToLogout"> <h6>Logout</h6> </a>
         </form>
       </div>
     </nav>
@@ -43,13 +42,19 @@
 
 <script>
 export default {
-
+  props: ["username"],
+  emits: ['logout'],
+  methods: {
+    ToLogout() {
+      this.$emit('logout');
+    }
+  },
 };
 </script>
 
-<style>
+<style scoped>
 body {
-    background: none;
+  background: white;
 }
 .nav {
     background: #005B70;
@@ -57,16 +62,15 @@ body {
 .menu-page {
     font-family: sans-serif;
     font-weight: 500;
-    color: #FFFFFF;
-}
-.menu-page:hover {
-    /* background: rgba(5, 60, 72, 0.88);
-    border-radius: 5px; */
-    text-decoration: 3px underline red;
+    color: #022730;
 }
 .btn-signout {
     font-family: sans-serif;
     font-style: normal;
     font-weight: normal;
+}
+.router-link-active {
+    text-decoration: 5px underline white;
+    border-radius: 2px;
 }
 </style>
