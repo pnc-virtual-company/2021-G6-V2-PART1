@@ -14,7 +14,11 @@
                         </div>
                         <div class="col-sm-3 d-flex flex-column justify-content-around">
                             <div class="btn-action d-flex justify-content-between">
-                                <button class="btn btn-danger fa fa-remove"></button>
+                                <button class="btn btn-danger fa fa-remove" 
+                                    data-toggle="modal"
+                                    data-target="#exampleModalCenter"
+                                >
+                                </button>
                                 <button class="btn btn-success fa fa-pencil"></button>
                             </div>
                             <div class=" d-flex flex-column justify-content-center align-items-center">
@@ -28,7 +32,6 @@
                 </div>
             </div>
         </div>
-        
     </div>
 </template>
 <script>
