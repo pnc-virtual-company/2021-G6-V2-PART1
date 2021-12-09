@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Category;
+
 class CategoryController extends Controller
 {
     /**
@@ -30,7 +31,7 @@ class CategoryController extends Controller
         $category = new Category();
         $category->name = $request->name;
         $category->save();
-        return response()->json(["message" => "Created successful", 'data' => $category],201);
+        return response()->json(["message" => "Created", 'data' => $category],201);
     }
 
     /**
@@ -59,7 +60,7 @@ class CategoryController extends Controller
         $category = Category::findOrFail($id);
         $category->name = $request->name;
         $category->save();
-        return response()->json(["message" => "Updated Success"],200);
+        return response()->json(["message" => "Updated", 'data' => $category],200);
        
     }
 
@@ -73,7 +74,7 @@ class CategoryController extends Controller
     {
         $isDeleted = Category::destroy($id);
         if($isDeleted === 1){
-            return response()->json(['message' => "Deleted successful"]);
+            return response()->json(['message' => "Deleted"]);
         }else{
             return response()->json(["message" => "Id not found"]);
         }

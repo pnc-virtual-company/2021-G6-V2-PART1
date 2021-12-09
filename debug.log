@@ -1,2 +1,6 @@
+<<<<<<< HEAD
 [1205/141732.299:ERROR:registration_protocol_win.cc(102)] CreateFile: The system cannot find the file specified. (0x2)
 [1205/185432.323:ERROR:registration_protocol_win.cc(102)] CreateFile: The system cannot find the file specified. (0x2)
+=======
+[1128/181149.065:ERROR:registration_protocol_win.cc(102)] CreateFile: The system cannot find the file specified. (0x2)
+>>>>>>> develop

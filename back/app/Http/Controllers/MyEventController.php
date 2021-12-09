@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Models\MyEvent;
+use App\Http\Resources\MyEventResource;
 class MyEventController extends Controller
 {
     /**
@@ -14,7 +15,7 @@ class MyEventController extends Controller
      */
     public function getEvent()
     {
-        return MyEvent::latest()->get();
+        return MyEvent::with(["category", "user"])->latest()->get();
     }
     /**
      * Store a newly created resource in storage.
@@ -28,20 +29,23 @@ class MyEventController extends Controller
             'image' => 'nullable|image|mimes:jpg,jpeg,png|max:1999',
             'title' => 'required',
             'description' => 'required',
+            'country' => 'required',
             'city' => 'required',
             'start_date' => 'required|before:end_date',
             'end_date' => 'required|after:start_date',
             
         ]);
 
-        $request->file('image')->store('public/images/profiles');    
+        $request->file('image')->store('public/images/events');    
 
         $myevent = new MyEvent();
+        $myevent->user_id = $request->user_id;
         $myevent->category_id = $request->category_id;
         $myevent->image = $request->image;
-        $myevent->image = $request->file('image')->getClientOriginalName();
+        $myevent->image = $request->file('image')->hashName();
         $myevent->title = $request->title;
         $myevent->description = $request->description;
+        $myevent->country = $request->country;
         $myevent->city = $request->city;
         $myevent->start_date = $request->start_date;
         $myevent->end_date = $request->end_date;
@@ -71,26 +75,32 @@ class MyEventController extends Controller
     {
        
         $request->validate([
-            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:19999',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:1999',
             'title' => 'required',
             'description' => 'required',
-            'start_date' => 'required|before_or_equal:end_date',
-            'end_date' => 'required|after_or_equal:start_date',
+            'country' => 'required',
+            'city' => 'required',
+            'start_date' => 'required|before:end_date',
+            'end_date' => 'required|after:start_date',
             
         ]);
 
-        $request->file('image')->store('public/images/profile');    
+        $request->file('image')->store('public/images/profiles');    
 
         $myevent = MyEvent::findOrFail($id);
+        $myevent->user_id = $request->user_id;
         $myevent->category_id = $request->category_id;
         $myevent->image = $request->image;
         $myevent->image = $request->file('image')->hashName();
         $myevent->title = $request->title;
         $myevent->description = $request->description;
+        $myevent->country = $request->country;
+        $myevent->city = $request->city;
         $myevent->start_date = $request->start_date;
         $myevent->end_date = $request->end_date;
+        
         $myevent->save();
-        return response()->json(["message" => "Updated", 'data'=>$myevent],201);
+        return response()->json(["message" => "Updated", 'data'=>$myevent],200);
     }
 
     /**

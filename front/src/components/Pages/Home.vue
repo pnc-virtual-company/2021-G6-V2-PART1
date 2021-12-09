@@ -1,6 +1,6 @@
 <template>
   <section>
-    <event-nav> </event-nav>
+    
   </section>
 </template>
 
