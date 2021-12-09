@@ -71,7 +71,7 @@
             <button class="btn btn-primary form-control" >Register now</button>
         </form>
     </div>
-    <p class="text-center mt-2">Have an account? <router-link to="/signin">Sign in</router-link></p>
+    <p class="text-center mt-2">Have you already an account? <router-link to="/signin">Sign in</router-link></p>
     </div>
    
   </section>
