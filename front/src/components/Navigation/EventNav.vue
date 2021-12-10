@@ -1,6 +1,6 @@
 <template>
   <section>
-    <nav v-if="username !== null" class="navbar navbar-expand-lg navbar-light nav">
+    <nav v-if="username !== null" class="navbar navbar-expand-lg navbar-light nav ">
         <a class="navbar-brand text-white d-flex justify-content-center align-items-center" href="#">
             <img src="../../assets/avatar.png" width="40" height="40" class="d-inline-block align-top rounded rounded-circle mr-2" alt="">
             {{username.first_name}} {{username.last_name}}
@@ -18,7 +18,7 @@
       </button>
 
       <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
-        <ul class="navbar-nav m-auto mt-2 mt-lg-0">
+        <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
           <li class="nav-item active">
             <router-link to="/home" class="nav-link text-white menu-page">Home <span class="sr-only ">(current)</span></router-link>
           </li>
@@ -33,7 +33,7 @@
           </li>
         </ul>
         <form class="form-inline my-2 my-lg-0">
-          <a href="#" class="nav-link text-white my-2 my-sm-0" @click.prevent="ToLogout"> <h6>Logout</h6> </a>
+          <a href="#" class="nav-link text-warning my-2 my-sm-0" @click.prevent="ToLogout"> <h5>Logout</h5> </a>
         </form>
       </div>
     </nav>
@@ -56,8 +56,9 @@ export default {
 body {
   background: white;
 }
+/* #020269 */
 .nav {
-    background: #005B70;
+  background:  #020269; 
 }
 .menu-page {
     font-family: sans-serif;
@@ -69,8 +70,13 @@ body {
     font-style: normal;
     font-weight: normal;
 }
+.nav-item{
+  margin-right: 50px;
+}
+
 .router-link-active {
-    text-decoration: 5px underline white;
+    text-decoration: 3px underline white;
     border-radius: 2px;
 }
+
 </style>

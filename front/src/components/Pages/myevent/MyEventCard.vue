@@ -4,8 +4,9 @@
             <div class="card">
                 <div class="row p-3">
                     <div class="col-sm-5  d-flex justify-content-center">
-                        <img src="" class="img-fluid rounded" alt="">
+                        <img :src="url + event.image" class="img-fluid rounded" alt="">
                     </div>
+                   
                     <div class="col-sm-4 d-flex flex-column justify-content-between">
                         <h5>{{event.category.name}}</h5>
                         <h3>{{event.title}}</h3>
@@ -18,8 +19,8 @@
                         </div>
                         <div class=" d-flex flex-column justify-content-center align-items-center">
                             <div class="mt-4">
-                                <p class="text-muted">Start: {{event.start_date}}</p>
-                                <p class="text-muted">End: {{event.end_date}}</p>
+                                <p class="text-muted"> <strong class="text-primary">Start:</strong>  {{event.start_date}}</p>
+                                <p class="text-muted"><strong class="text-danger">End:</strong>  {{event.end_date}}</p>
                             </div>
                         </div>
                     </div>
@@ -37,6 +38,7 @@ export default {
             url : 'http://localhost:8000/storage/images/events/',
         }
     },
+    
 };
 </script>
 <style>

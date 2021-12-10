@@ -46,7 +46,7 @@ Route::get('/myevent/{id}',[MyEventController::class, "getOneEvent"]);
 Route::post('/myevent',[MyEventController::class, "createEvent"]);
 Route::put('/myevent/{id}',[MyEventController::class, "updateEvent"]);
 Route::delete('/myevent/{id}',[MyEventController::class, "destroyEvent"]);
-
+  
 // Get Country Route
 
 Route::get('/countries', [CountryController::class, 'getCountries']);

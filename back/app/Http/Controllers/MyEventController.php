@@ -26,7 +26,7 @@ class MyEventController extends Controller
     public function createEvent(Request $request)
     {
         $request->validate([
-            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:1999',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:1999|',
             'title' => 'required',
             'description' => 'required',
             'country' => 'required',

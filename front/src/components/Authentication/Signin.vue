@@ -29,7 +29,7 @@
                 />
             </div>
             
-            <button type="submit" class="btn btn-primary form-control">Login</button>
+            <button type="submit" class="btn form-control">Login</button>
         </form>
         
     </div>
@@ -88,8 +88,8 @@ export default {
 hr {
     font-weight: bolder;
     width: 25%;
-    background: black;
-    border: 1px solid black;
+    background: #020269;
+    border: 1px solid #020269;
 }
 .text-style {
     display: flex;
@@ -97,13 +97,18 @@ hr {
     margin-top: 20px;
 }
 
-.btn-text {
+.btn-text { 
     border: none;
-    background: rgba(255, 255, 255, 0.81);
+    background: rgba(207, 204, 204, 0.81);
+    color: #020269;
     border-radius: 10px;
     font-family: Arial, Helvetica, sans-serif;
     padding: 7px;
     display: flex;
     align-items: center;
+}
+button{
+    background: #020269;
+    color: white;
 }
 </style>

@@ -1,39 +1,46 @@
 <template>
   <section>
     <div class="container p-4">
+      <div
+        v-if="isShowMessage"
+        class="alert alert-dismissible mb-3"
+        :class="showMessage === myMessage ? myClass : 'alert-danger'"
+      >
+        <a href="#" class="close" data-dismiss="alert" aria-label="close"
+          >&times;</a
+        >
+        <strong>{{ message }}</strong>
+      </div>
+
       <div class="d-flex justify-content-between mb-3">
         <h2 class="text-info">My Events</h2>
         <base-dailog
           v-if="dialogDisplayed"
           :title="dialogTitle"
-          :mode="dialogMode"
           @close="closeDialog"
         >
           <div class="event-form">
             <div class="form-row">
               <div class="form-group col-sm-12">
-                <img
-                    src=""
+                <div v-if="imagepreview" class="bg-primary">
+                  <img
+                    :src="imagepreview"
                     class="img-fluid"
                     alt=""
-                />
-                <label for="image">Image</label>
-                <div class="d-flex">
-                  <input id="image" type="file" class="form-control mr-3" />
-                  <button class="btn btn-primary">Upload</button>
+                  />
                 </div>
+                
+                <label >Image</label>
+                <input id="image" type="file" hidden class="form-control mr-3" @change="imageSeleted"/>
+                <label for="image" class="fa fa-image btn btn-outline-primary p-3"></label>
               </div>
               <div class="form-group col-sm-12">
                 <label for="category">Category</label>
-                <input
-                  list="categoryList"
-                  class="form-control"
-                  placeholder="Select category"
-                  v-model="event_data.categoryName"
-                />
-                <datalist id="categoryList">
-                  <option v-for="category of categories" :key="category.id" class="form-control"> {{category.name}} </option>
-                </datalist>
+                <select id="category" v-model="event_data.categoryId" class="form-control">
+                  <option v-for="category of categories" :key="category.id" :value="category.id">
+                      {{category.name}} 
+                  </option>
+                </select>
               </div>
               <div class="form-group col-sm-12">
                 <label for="title">Title</label>
@@ -98,9 +105,16 @@
               </div>
             </div>
           </div>
+
           <template #action>
-            <base-button class="right-man-button btn btn-info" type="submit">
+            <!-- <base-button class="right-man-button btn btn-info" type="submit">
               Create
+            </base-button> -->
+            <base-button @click="closeDialog" class="mr-3 btn btn-secondary"> Close </base-button>
+            <base-button :class="classButton"
+            @click="onConfirm"
+            >
+            {{dialogButton}}
             </base-button>
           </template>
         </base-dailog>
@@ -110,22 +124,25 @@
           type="submit"
           @click="showCreateMyEvent"
         >
-          + Add Category
+          + Add Event
         </base-button>
       </div>
 
       <hr class="bg-dark pb-1">
 
       <my-event-search> </my-event-search>
-      <my-event-card v-for="event of my_events" :key="event.id" :event="event" class="mt-3"> </my-event-card>
+      <my-event-card v-for="event of my_events" 
+      :key="event.id" :event="event" 
+      class="mt-3"> </my-event-card>
     </div>
   </section>
 </template>
 
 <script>
 import axios from '../axios-http.js';
-import MyEventCard from "../components/Pages/MyEvent/MyEventCard.vue";
-import MyEventFormSearch from "../components/Pages/MyEvent/MyEventFormSearch.vue";
+import MyEventCard from "../components/Pages/myevent/MyEventCard.vue";
+import MyEventFormSearch from "../components/Pages/myevent/MyEventFormSearch.vue";
+
 import BaseButton from "../components/UI/BaseButton.vue";
 import BaseDialog from "../components/UI/BaseDialog.vue";
 
@@ -139,16 +156,18 @@ export default {
   data() {
     return {
       event_data: {
-        categoryName: "",
+        categoryId: null,
         title: "",
         start_date: "",
         end_date: "",
-        country: "",
+        country: "",  
         city: "",
         description: "",
       },
       my_events: [],
       message: "",
+      isShowMessage: false,
+      ShowMessage: "",
       myClass: "",
       myMessage: "",
       myEventAction: {},
@@ -157,6 +176,21 @@ export default {
       categories: [],
       countries: {},
       countryName: [],
+      defaultImage: "../assets/download.jpg",
+      image: null,
+      imagepreview: null,
+
+      messageError:{
+        image_error: "",
+        title_error: "",
+        description_error: "",
+        country_error: "",
+        city_error: "",
+        start_date_error: "",
+        end_date_error: "",
+
+      }
+
     };
   },
   computed: {
@@ -195,10 +229,18 @@ export default {
     },
   },
   methods: {
+    getMyEvent() {
+      // GET MY EVENTS
+      axios.get('/myevent')
+      .then(response => {
+          this.my_events = response.data
+      })
+    },
     showCreateMyEvent() {
       this.dialogMode = "create";
       this.dialogDisplayed = true;
     },
+
     closeDialog() {
       this.dialogDisplayed = false;
 
@@ -209,8 +251,93 @@ export default {
       this.event_data.city = "";
       this.event_data.description = "";
     },
+
+    addMyEvent() {
+      let myEventData = new FormData();
+
+      myEventData.append('user_id', parseInt(localStorage.getItem("userId")));
+      myEventData.append('category_id', this.event_data.categoryId);
+      myEventData.append('title', this.event_data.title);
+      myEventData.append('description', this.event_data.description);
+      myEventData.append('country', this.event_data.country);
+      myEventData.append('city', this.event_data.city);
+      myEventData.append('start_date', this.event_data.start_date);
+      myEventData.append('end_date', this.event_data.end_date);
+      if(this.image !== null) {
+        myEventData.append('image', this.image);
+      }
+       console.log(myEventData);
+
+      axios.post("/myevent", myEventData)
+      .then(res => {
+        console.log(res.data)
+        this.showMessage = res.data.message;
+        this.message = "Create successfully";
+        this.myClass = "alert-success";
+        this.myMessage = "Created";
+        
+        this.getMyEvent();
+      })
+      .catch((error) => {
+        if (error.response.status === 422) {
+          if(error.response.data.errors.image !== undefined){
+             this.messageError.image_error =
+            error.response.data.errors.image;
+          }
+         
+          this.messageError.title_error =
+            error.response.data.errors.title;
+          this.messageError.description_error = 
+            error.response.data.errors.description;
+          this.messageError.country_error =
+            error.response.data.errors.country;
+          this.messageError.start_date_error =
+            error.response.data.errors.start_date;
+          this.messageError.end_date_error =
+            error.response.data.errors.end_date;
+
+        }
+
+        this.message = this.messageError.image_error + "\n" +
+        this.messageError.title_error + "\n" + 
+        this.messageError.description_error + "\n" + 
+        this.messageError.country_error + "\n" + 
+        this.messageError.start_date_error + "\n" + 
+        this.messageError.end_date_error;
+
+        // console.log(this.message);
+      });
+      
+      this.isShowMessage = true;
+    },
+
+    imageSeleted(e) {
+      this.image = e.target.files[0];
+
+      let reader = new FileReader();
+      reader.readAsDataURL(this.image);
+      reader.onload = e => {
+        this.imagepreview = e.target.result;
+      };
+    },
+
+    onConfirm() {
+      if(this.dialogMode === 'create') {
+        this.addMyEvent(this.event_data);
+      } else if (this.dialogMode === 'edit') {
+        this.updateEvent(this.myEventAction.id);
+      } else if(this.dialogMode === 'Remove') {
+        this.deleteEvent(this.myEventAction.id)
+      }
+
+      this.closeDialog();
+      
+    },
+
+
   },
   mounted() {
+    this.getMyEvent();
     //   GET CATEGORY FROM BACKEND
     axios.get('/category')
     .then(res => {
@@ -223,12 +350,7 @@ export default {
         for(let count in res.data) {
             this.countryName.push(count)
         }
-    })
-    // GET MY EVENTS
-    axios.get('/myevent')
-    .then(response => {
-        this.my_events = response.data
-    })
+    });
   },
 };
 </script>

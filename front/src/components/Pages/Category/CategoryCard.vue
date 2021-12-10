@@ -39,6 +39,6 @@ export default {
 
 <style scoped>
     .card {
-        box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+        box-shadow: rgba(5, 1, 51, 0.5) 0px 3px 6px, rgba(3, 2, 53, 0.5) 0px 3px 6px;
     }
 </style>
