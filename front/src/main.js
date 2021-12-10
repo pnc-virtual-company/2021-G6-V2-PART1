@@ -1,6 +1,12 @@
 import { createApp } from 'vue'
 import App from './App.vue'
-import MyEventCard from './components/myevent/MyEventCard';
+import router from './router/router.js'
+
+
 const app = createApp(App);
-app.component('my-event-card', MyEventCard);
-app.mount('#app');
+
+app.use(router);
+app.mount("#app")
+
+
+
