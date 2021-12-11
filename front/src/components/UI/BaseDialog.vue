@@ -12,7 +12,7 @@
             </section>
             <menu>
                 <slot name="action">
-                    
+                  
                 </slot>
             </menu>
         </dialog>
@@ -24,8 +24,8 @@
 export default {
     props: {
         title: {
-            type: String,
-            required: false,
+          type: String,
+          required: false,
         }
     },
     emit: ['close'],

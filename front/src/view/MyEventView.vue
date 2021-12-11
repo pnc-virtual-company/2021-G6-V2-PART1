@@ -16,34 +16,41 @@
         <base-dailog
           v-if="dialogDisplayed"
           :title="dialogTitle"
-          :mode="dialogMode"
           @close="closeDialog"
         >
           <div class="event-form" v-if="dialogMode !== 'remove'">
             <div class="form-row">
               <div class="form-group col-sm-12">
-                <img
-                    src=""
-                    class="img-fluid"
-                    alt=""
-                />
-                <label for="image">Image</label>
-                <div class="d-flex">
-                  <input id="image" type="file" class="form-control mr-3" />
-                  <button class="btn btn-primary">Upload</button>
+                <div v-if="imageToEdt === 'create' ">
+                  <div v-if="imagepreview" class="bg-primary">
+                    <img
+                      :src="imagepreview"
+                      class="img-fluid"
+                      alt=""
+                    />
+                  </div>
                 </div>
+                <div v-if="imageToEdt === 'edit' ">
+                  <div class="bg-primary">
+                    <img
+                      :src="url + imagepreview"
+                      class="img-fluid"
+                      alt=""
+                    />
+                  </div>
+                </div>
+                
+                <label >Image</label>
+                <input id="image" type="file" hidden class="form-control mr-3" @change="imageSeleted"/>
+                <label for="image" class="fa fa-image btn btn-outline-primary p-3"></label>
               </div>
               <div class="form-group col-sm-12">
                 <label for="category">Category</label>
-                <input
-                  list="categoryList"
-                  class="form-control"
-                  placeholder="Select category"
-                  v-model="event_data.categoryName"
-                />
-                <datalist id="categoryList">
-                  <option v-for="category of categories" :key="category.id" class="form-control"> {{category.name}} </option>
-                </datalist>
+                <select id="category" v-model="event_data.categoryId" class="form-control">
+                  <option v-for="category of categories" :key="category.id" :value="category.id">
+                      {{category.name}} 
+                  </option>
+                </select>
               </div>
               <div class="form-group col-sm-12">
                 <label for="title">Title</label>
@@ -115,11 +122,11 @@
             <!-- <base-button class="right-man-button btn btn-info" type="submit">
               Create
             </base-button> -->
-            <base-button v-if="dialogMode === 'remove'" @click="closeDialog" class="mr-3 btn btn-secondary"> Close </base-button>
+            <base-button @click="closeDialog" class="mr-3 btn btn-secondary"> Close </base-button>
             <base-button :class="classButton"
             @click="onConfirm"
             >
-            {{dialogButton}} 
+            {{dialogButton}}
             </base-button>
           </template>
         </base-dailog>
@@ -140,6 +147,7 @@
         :key="event.id" 
         :event="event"  
         @requestRemove="showDeleteDialog"
+        @requestEdit="showEditForm"
       > </my-event-card>
     </div>
   </section>
@@ -162,16 +170,18 @@ export default {
   data() {
     return {
       event_data: {
-        categoryName: "",
+        categoryId: null,
         title: "",
         start_date: "",
         end_date: "",
-        country: "",
+        country: "",  
         city: "",
         description: "",
       },
       my_events: [],
       message: "",
+      isShowMessage: false,
+      ShowMessage: "",
       myClass: "",
       myMessage: "",
       myEventAction: {},
@@ -180,6 +190,24 @@ export default {
       categories: [],
       countries: {},
       countryName: [],
+      defaultImage: "../assets/download.jpg",
+      image: null,
+      imagepreview: null,
+
+      messageError:{
+        image_error: "",
+        title_error: "",
+        description_error: "",
+        country_error: "",
+        city_error: "",
+        start_date_error: "",
+        end_date_error: "",
+
+      },
+
+      imageToEdt: 'create',
+      url : 'http://localhost:8000/storage/images/events/',
+
     };
   },
   computed: {
@@ -218,20 +246,143 @@ export default {
     },
   },
   methods: {
+
+// ####################################   GET MY EVENTS   ###############################
+    getMyEvent() {
+      axios.get('/myevent')
+      .then(response => {
+          this.my_events = response.data
+      })
+    },
+// ####################################   SHOW CREATE FORM WHEN CLICK ON ADD EVENT ########################
     showCreateMyEvent() {
       this.dialogMode = "create";
       this.dialogDisplayed = true;
+      this.imagepreview = null;
     },
+// ####################################   SHOW CREATE FORM WHEN CLICK ON ADD EVENT ########################
+    showEditForm(eventData) {
+      this.imageToEdt = 'edit';
+      this.dialogMode = 'edit';
+      this.dialogDisplayed = true;
+      this.myEventAction = {
+        id: eventData.id,
+        category_id: eventData.categories_id,
+        user_id: eventData.user_id,
+        image: eventData.image,
+        title: eventData.title,
+        description: eventData.description,
+        country: eventData.country,
+        city: eventData.city,
+        start_date: eventData.start_date,
+        end_date: eventData.end_date
+      }
+
+      this.event_data.categoryId = eventData.category.id;
+
+      this.event_data.title = eventData.title;
+      this.event_data.description = eventData.description;
+      this.event_data.start_date = eventData.start_date;
+      this.event_data.end_date = eventData.end_date;
+      this.event_data.country = eventData.country;
+      this.event_data.city = eventData.city;
+
+      this.imagepreview = eventData.image;
+    },
+
+// #################################### UPDATE EVENT FUNCTION ########################
+  updateMyEvent(previousData) {
+    let myNewEventData = new FormData();
+
+      myNewEventData.append('user_id', parseInt(previousData.user_id));
+      myNewEventData.append('category_id', this.event_data.categoryId);
+      myNewEventData.append('title', this.event_data.title);
+      myNewEventData.append('description', this.event_data.description);
+      myNewEventData.append('country', this.event_data.country);
+      myNewEventData.append('city', this.event_data.city);
+      myNewEventData.append('start_date', this.event_data.start_date);
+      myNewEventData.append('end_date', this.event_data.end_date);
+      if(this.image !== null) {
+        myNewEventData.append('image', this.image);
+      }
+      console.log(myNewEventData);
+
+      axios.put("/myevent/" + previousData.id, myNewEventData)
+      .then(res => {
+        
+        this.showMessage = res.data.message;
+        this.message = "Create successfully";
+        this.myClass = "alert-success";
+        this.myMessage = "Created";
+        
+        this.getMyEvent();
+      })
+      .catch((error) => {
+        if (error.response.status === 422 || error.response.status === 500) {
+          if(error.response.status === 500){
+            this.messageError.image_error =
+            "Please select an image !";
+          }
+          if(error.response.data.errors.title !== undefined) {
+            this.messageError.title_error =
+            error.response.data.errors.title;
+          }
+          if (error.response.data.errors.description !== undefined) {
+            this.messageError.description_error = 
+            error.response.data.errors.description;
+          } 
+
+          if (error.response.data.errors.country !== undefined) {
+            this.messageError.country_error =
+            error.response.data.errors.country;
+          }
+          if (error.response.data.errors.start_date) {
+            this.messageError.start_date_error =
+            error.response.data.errors.start_date;
+          }
+          if (error.response.data.errors.end_date) {
+            this.messageError.end_date_error =
+            error.response.data.errors.end_date;
+          }
+        }
+
+        this.message = this.messageError.image_error + "\n" +
+        this.messageError.title_error + "\n" + 
+        this.messageError.description_error + "\n" + 
+        this.messageError.country_error + "\n" + 
+        this.messageError.start_date_error + "\n" + 
+        this.messageError.end_date_error;
+      });
+      
+      this.isShowMessage = true;
+  },
+
+// ################################### CLOSE FORM FUNCTION ##################################
+
     closeDialog() {
       this.dialogDisplayed = false;
 
-      this.event_data.categoryName = "";
+      this.event_data.categoryId = "";
       this.event_data.title = "";
       this.event_data.start_date = "";
       this.event_data.end_date = "";
+      this.event_data.country = "";
       this.event_data.city = "";
       this.event_data.description = "";
+
+      this.image = null;
+      this.imagepreview = null;
     },
+// ################################# SHOW DELETE DIALOG WHEN CLICK ON BUTTON REMOVE ##########################
+    showDeleteDialog(id) {
+      this.dialogMode = 'remove';
+      this.dialogDisplayed = true
+      this.myEventAction = {
+        id: id
+      }
+    },
+
+// ################################# DELETE MY EVENT FUNCTION ########################################
     deleteMyEvent(id) {
       this.isShowMessage = true;
       axios.delete('/myevent/' + id)
@@ -244,45 +395,115 @@ export default {
       })
       console.log(id);
     },
-    showDeleteDialog(id) {
-      this.dialogMode = 'remove';
-      this.dialogDisplayed = true
-      this.myEventAction = {
-        id: id
+//  ########################################### ADD NEW EVENT FUNCTION #################################
+    addMyEvent() {
+      let myEventData = new FormData();
+
+      myEventData.append('user_id', parseInt(localStorage.getItem("userId")));
+      myEventData.append('category_id', this.event_data.categoryId);
+      myEventData.append('title', this.event_data.title);
+      myEventData.append('description', this.event_data.description);
+      myEventData.append('country', this.event_data.country);
+      myEventData.append('city', this.event_data.city);
+      myEventData.append('start_date', this.event_data.start_date);
+      myEventData.append('end_date', this.event_data.end_date);
+      if(this.image !== null) {
+        myEventData.append('image', this.image);
       }
-      console.log(id)
+       console.log(myEventData);
+
+      axios.post("/myevent", myEventData)
+      .then(res => {
+        
+        this.showMessage = res.data.message;
+        this.message = "Create successfully";
+        this.myClass = "alert-success";
+        this.myMessage = "Created";
+        
+        this.getMyEvent();
+      })
+      .catch((error) => {
+        if (error.response.status === 422 || error.response.status === 500) {
+          if(error.response.status === 500){
+            this.messageError.image_error =
+            "Please select an image !";
+          }
+          if(error.response.data.errors.title !== undefined) {
+            this.messageError.title_error =
+            error.response.data.errors.title;
+          }
+          if (error.response.data.errors.description !== undefined) {
+            this.messageError.description_error = 
+            error.response.data.errors.description;
+          } 
+
+          if (error.response.data.errors.country !== undefined) {
+            this.messageError.country_error =
+            error.response.data.errors.country;
+          }
+          if (error.response.data.errors.start_date) {
+            this.messageError.start_date_error =
+            error.response.data.errors.start_date;
+          }
+          if (error.response.data.errors.end_date) {
+            this.messageError.end_date_error =      
+            error.response.data.errors.end_date;       
+          }
+        }
+
+        this.message = this.messageError.image_error + "\n" +
+        this.messageError.title_error + "\n" + 
+        this.messageError.description_error + "\n" + 
+        this.messageError.country_error + "\n" + 
+        this.messageError.start_date_error + "\n" + 
+        this.messageError.end_date_error;
+      });
+      
+      this.isShowMessage = true;
     },
+// ###################################### GET IMAGE FILE AND DISPLAY IMAGE ON FORM #############################
+    imageSeleted(e) {
+
+      this.imageToEdt = 'create';
+      this.image = e.target.files[0];
+
+      let reader = new FileReader();
+      reader.readAsDataURL(this.image);
+      reader.onload = e => {
+        this.imagepreview = e.target.result;
+      };
+    },
+// ####################################### ON CONFIRM FUNCTION ####################################################
     onConfirm() {
-      // if(this.dialogMode === 'create') {
-      //   this.addCategory(this.name);
-      // } else if (this.dialogMode === 'edit') {
-      //   this.updateCategory(this.categoryToEdit.id);
-      if(this.dialogMode === 'remove') {
+      if(this.dialogMode === 'create') {
+        this.addMyEvent(this.event_data);
+      } else if (this.dialogMode === 'edit') {
+        this.updateMyEvent(this.myEventAction);
+      } else if(this.dialogMode === 'remove') {
         this.deleteMyEvent(this.myEventAction.id)
       }
 
       this.closeDialog();
+      
     },
+
   },
   mounted() {
-    //   GET CATEGORY FROM BACKEND
+// ###################################### CALL GET MY EVENT FUNCTION ##############################################
+    this.getMyEvent();
+// ##################################### GET CATEGORY FORM BACKEND ################################################
     axios.get('/category')
     .then(res => {
         this.categories = res.data
     })
-    // GET COUNTRY FROM BACKEND
+// #################################### GET COUNTRY FROM BACKEND ##################################################
     axios.get('/countries')
     .then(res => {
         this.countries = res.data
         for(let count in res.data) {
             this.countryName.push(count)
         }
-    })
-    // GET MY EVENTS
-    axios.get('/myevent')
-    .then(response => {
-        this.my_events = response.data
-    })
+    });
   },
 };
 </script>

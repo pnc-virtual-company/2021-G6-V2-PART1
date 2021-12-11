@@ -128,4 +128,9 @@ export default {
     margin-left: 40px;
     font-size: 20px;
 }
+
+button{
+    background: #020269;
+    color: white;
+}
 </style>

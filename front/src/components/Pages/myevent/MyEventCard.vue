@@ -4,8 +4,9 @@
             <div class="card">
                 <div class="row p-3">
                     <div class="col-sm-5  d-flex justify-content-center">
-                        <img :src="url + event.image" class="img-fluid rounded" alt="">
+                        <img :src="url + event.image" class="img-fluid rounded" style="max-height: 150px;" alt="">
                     </div>
+                   
                     <div class="col-sm-4 d-flex flex-column justify-content-between">
                         <h5>{{event.category.name}}</h5>
                         <h3>{{event.title}}</h3>
@@ -14,12 +15,12 @@
                     <div class="col-sm-3 d-flex flex-column justify-content-around">
                         <div class="btn-action d-flex justify-content-end">
                             <button class="btn btn-danger fa fa-remove mr-3" @click="remove(event.id)"></button>
-                            <button class="btn btn-success fa fa-pencil"></button>
+                            <button class="btn btn-success fa fa-pencil" @click="edit(event)"></button>
                         </div>
                         <div class=" d-flex flex-column justify-content-center align-items-center">
                             <div class="mt-4">
-                                <p class="text-muted">Start: {{event.start_date}}</p>
-                                <p class="text-muted">End: {{event.end_date}}</p>
+                                <p class="text-muted"> <strong class="text-primary">Start:</strong>  {{event.start_date}}</p>
+                                <p class="text-muted"><strong class="text-danger">End:</strong>  {{event.end_date}}</p>
                             </div>
                         </div>
                     </div>
@@ -42,10 +43,11 @@ export default {
         remove(id) {
             this.$emit('requestRemove', id);
         },
-        edit(id, name) {
-            this.$emit('requestEdit', id, name);
+        edit(myevent) {
+            this.$emit('requestEdit', myevent);
         }
     },
+    
 };
 </script>
 <style>

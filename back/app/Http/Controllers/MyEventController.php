@@ -26,7 +26,7 @@ class MyEventController extends Controller
     public function createEvent(Request $request)
     {
         $request->validate([
-            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:1999',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:1999|',
             'title' => 'required',
             'description' => 'required',
             'country' => 'required',
@@ -113,7 +113,7 @@ class MyEventController extends Controller
     {
         $isDeleted = MyEvent::destroy($id);
         if($isDeleted === 1){
-            return response()->json(["message" => "Event deleted success"],200);
+            return response()->json(["message" => "Deleted"],200);
         }else{
             return response()->json(["message" => "ID not found"],401);
         }
