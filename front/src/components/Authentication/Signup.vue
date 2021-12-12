@@ -4,11 +4,19 @@
          <!-- <h1 class="text-center p-4 font-weight-light">My Events Registration</h1> -->
     <div class="form-field">
         <form action="#" @submit.prevent="addUserInfo">
-            <div class="form-group inser-img">
-                <img src="../../assets/avatar.png" alt="" width="100" height="100" class="rounded">
-                <input type="file" name="" id="image" class="d-none">
-                <label for="image" class="fa fa-plus-circle btn btn-outline-info img-icon"></label>
+            <div class="form-group inser-img d-flex">
+                 <div v-if="imagepreview">
+                     <img :src="imagepreview" class="figure-img img-fluid rounded"  width="100" height="100">
+                 </div>
+                 <div v-else>
+                    <img src="../../assets/avatar.png" alt="" width="100" height="100" class="rounded">
+                 </div>
+                <div class="m-auto">
+                    <input type="file" name="" id="image" class="d-none" @change="imageSeleted">
+                    <label for="image" class="fa fa-plus-circle btn btn-outline-info img-icon"></label>
+                </div>
             </div>
+           
             <div class="form-row">
                 <div class="form-group col-md-6">
                     <input
@@ -90,10 +98,20 @@ export default {
                 password: '',
                 comfirm_password: ''
             },
+            image:null,
+            imagepreview : null,
             
         }
     },
     methods: {
+        imageSeleted(e){
+            this.image = e.target.files[0];
+            let reader = new FileReader();
+            reader.readAsDataURL(this.image);
+            reader.onload = e =>{
+                this.imagepreview = e.target.result;
+            }
+        },
         addUserInfo() {
             this.$emit('adduser', this.signup_form);
         },

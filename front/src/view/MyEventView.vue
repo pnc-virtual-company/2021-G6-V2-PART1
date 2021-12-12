@@ -15,7 +15,7 @@
       <div class="d-flex justify-content-between mb-3">
         <h2 class="text-info">My Events</h2>
         <base-dailog
-          v-if="dialogDisplayed"
+          v-if="dialogDisplayed" 
           :title="dialogTitle"
           @close="closeDialog"
         >
@@ -130,10 +130,16 @@
 
       <hr class="bg-dark pb-1">
 
-      <my-event-search> </my-event-search>
-      <my-event-card v-for="event of my_events" 
-      :key="event.id" :event="event" 
-      class="mt-3"> </my-event-card>
+      <my-event-search 
+        @addSearchEvent="searchEvent"
+        :cities="cities" > 
+      </my-event-search>
+
+      <my-event-card  v-for="event of my_events" 
+        :key="event.id" :event="event"
+        class="mt-3"  > 
+      </my-event-card>
+
     </div>
   </section>
 </template>
@@ -176,6 +182,7 @@ export default {
       categories: [],
       countries: {},
       countryName: [],
+      cities: [],
       defaultImage: "../assets/download.jpg",
       image: null,
       imagepreview: null,
@@ -234,8 +241,10 @@ export default {
       axios.get('/myevent')
       .then(response => {
           this.my_events = response.data
+          // console.log(this.my_events);
       })
     },
+
     showCreateMyEvent() {
       this.dialogMode = "create";
       this.dialogDisplayed = true;
@@ -244,14 +253,36 @@ export default {
     closeDialog() {
       this.dialogDisplayed = false;
 
-      this.event_data.categoryName = "";
+      this.imagepreview = null,
+      this.event_data.categoryId = "";
       this.event_data.title = "";
       this.event_data.start_date = "";
       this.event_data.end_date = "";
       this.event_data.city = "";
+      this.event_data.country = "";
       this.event_data.description = "";
     },
 
+// SEARCH BY TITLE AND BY CITY ========================================================================================
+
+  searchEvent(searchByText, city){
+    if (searchByText !== ""){
+      this.my_events = this.my_events.filter(events => 
+      ((events.title.toLowerCase().includes(searchByText.toLowerCase())) 
+      ||(events.description.toLowerCase().includes(searchByText.toLowerCase())) 
+      ||(events.category.name.toLowerCase().includes(searchByText.toLowerCase()))) 
+      && (events.city === city));
+
+      console.log(this.my_events);
+
+    }else{
+      this.getMyEvent();
+    }
+  },
+
+  
+   
+  // Add Event Card===================================================================
     addMyEvent() {
       let myEventData = new FormData();
 
@@ -270,7 +301,6 @@ export default {
 
       axios.post("/myevent", myEventData)
       .then(res => {
-        console.log(res.data)
         this.showMessage = res.data.message;
         this.message = "Create successfully";
         this.myClass = "alert-success";
@@ -331,26 +361,34 @@ export default {
       }
 
       this.closeDialog();
-      
     },
-
-
   },
+
   mounted() {
     this.getMyEvent();
     //   GET CATEGORY FROM BACKEND
     axios.get('/category')
     .then(res => {
-        this.categories = res.data
+      this.categories = res.data
     })
     // GET COUNTRY FROM BACKEND
     axios.get('/countries')
     .then(res => {
         this.countries = res.data
         for(let count in res.data) {
-            this.countryName.push(count)
+          this.countryName.push(count);
         }
+       
+      
     });
+
+    axios.get('/cities').then(response=>{
+      for(let city of response.data.cities){
+        this.cities.push(city);
+      }
+ 
+    })
+  
   },
 };
 </script>

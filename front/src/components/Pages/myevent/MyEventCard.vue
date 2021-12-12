@@ -10,6 +10,7 @@
                     <div class="col-sm-4 d-flex flex-column justify-content-between">
                         <h5>{{event.category.name}}</h5>
                         <h3>{{event.title}}</h3>
+                        <p>{{event.country}} {{event.city}}</p>
                         <h5><a href="#" class="font-weight-light">Event member</a></h5>
                     </div>
                     <div class="col-sm-3 d-flex flex-column justify-content-around">
@@ -32,7 +33,7 @@
 </template>
 <script>
 export default {
-    props: ['event'],
+    props: ['event', 'containEventBysearch'],
     data() {
         return {
             url : 'http://localhost:8000/storage/images/events/',

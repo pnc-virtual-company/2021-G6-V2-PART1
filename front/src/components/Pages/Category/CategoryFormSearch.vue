@@ -9,7 +9,7 @@
                     aria-label="Username"
                     aria-describedby="basic-addon1"
                     v-model="name"
-                    @keyup.prevent="addName"
+                    @keyup.prevent="addName" 
                 />
                 <div class="input-group-prepend">
                     <button
