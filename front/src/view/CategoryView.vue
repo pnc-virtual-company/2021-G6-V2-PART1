@@ -12,7 +12,7 @@
         <strong>{{ message }}</strong>
       </div>
 
-      <div class="d-flex justify-content-between mb-2">
+      <div class="d-flex justify-content-between mb-2 dropdown">
         <h2 id="category-title">Category</h2>
 
         <base-dailog
@@ -37,7 +37,7 @@
             <h5>Are you sure you want to remove this category?</h5>
           </div>
           <template #action>
-            <base-button v-if="dialogMode === 'Remove'" @click="closeDailog" class="mr-3 btn btn-secondary"> Close </base-button>
+            <base-button  @click="closeDailog" class="mr-3 btn btn-secondary"> Close </base-button>
             <base-button :class="classButton"
             @click="onConfirm"
             >
@@ -288,4 +288,9 @@ h3 {
 hr{
   background:#022669;
 }
+
+::-webkit-scrollbar {
+width: 10px;
+}
+
 </style>

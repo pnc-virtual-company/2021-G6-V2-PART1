@@ -116,6 +116,7 @@ class MyEventController extends Controller
             return response()->json(["message" => "Event deleted success"],200);
         }else{
             return response()->json(["message" => "ID not found"],401);
-        }
+        } 
     }
+
 }

@@ -6,6 +6,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\MyEventController;
 use App\Http\Controllers\CountryController;
+use App\Http\Controllers\CityController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -46,9 +47,12 @@ Route::get('/myevent/{id}',[MyEventController::class, "getOneEvent"]);
 Route::post('/myevent',[MyEventController::class, "createEvent"]);
 Route::put('/myevent/{id}',[MyEventController::class, "updateEvent"]);
 Route::delete('/myevent/{id}',[MyEventController::class, "destroyEvent"]);
-  
+
+       
 // Get Country Route
 
 Route::get('/countries', [CountryController::class, 'getCountries']);
+
+Route::get('/cities', [CityController::class, 'getCities']);
 
 
