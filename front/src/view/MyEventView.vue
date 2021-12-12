@@ -22,7 +22,7 @@
             <div class="form-row">
               <div class="form-group col-sm-12">
                 <div v-if="imageToEdt === 'create' ">
-                  <div v-if="imagepreview" class="bg-primary">
+                  <div v-if="imagepreview">
                     <img
                       :src="imagepreview"
                       class="img-fluid"
@@ -31,7 +31,7 @@
                   </div>
                 </div>
                 <div v-if="imageToEdt === 'edit' ">
-                  <div class="bg-primary">
+                  <div>
                     <img
                       :src="url + imagepreview"
                       class="img-fluid"
@@ -119,9 +119,6 @@
             <h5>Are you sure you want to remove this event?</h5>
           </div>
           <template #action>
-            <!-- <base-button class="right-man-button btn btn-info" type="submit">
-              Create
-            </base-button> -->
             <base-button @click="closeDialog" class="mr-3 btn btn-secondary"> Close </base-button>
             <base-button :class="classButton"
             @click="onConfirm"
@@ -190,7 +187,7 @@ export default {
       categories: [],
       countries: {},
       countryName: [],
-      defaultImage: "../assets/download.jpg",
+      defaultImage: "../assets/null.png",
       image: null,
       imagepreview: null,
 
@@ -292,36 +289,41 @@ export default {
 
 // #################################### UPDATE EVENT FUNCTION ########################
   updateMyEvent(previousData) {
-    let myNewEventData = new FormData();
+    
+    // let newImage = new FormData();
+    // newImage.append(this.image);
 
-      myNewEventData.append('user_id', parseInt(previousData.user_id));
-      myNewEventData.append('category_id', this.event_data.categoryId);
-      myNewEventData.append('title', this.event_data.title);
-      myNewEventData.append('description', this.event_data.description);
-      myNewEventData.append('country', this.event_data.country);
-      myNewEventData.append('city', this.event_data.city);
-      myNewEventData.append('start_date', this.event_data.start_date);
-      myNewEventData.append('end_date', this.event_data.end_date);
-      if(this.image !== null) {
-        myNewEventData.append('image', this.image);
-      }
-      console.log(myNewEventData);
-
+    let myNewEventData = {
+      user_id: previousData.user_id,
+      category_id: this.event_data.categoryId,
+      image: this.image,
+      title: this.event_data.title,
+      description: this.event_data.description,
+      country: this.event_data.country,
+      city: this.event_data.city,
+      start_date: this.event_data.start_date,
+      end_date: this.event_data.end_date,
+    }
+      
       axios.put("/myevent/" + previousData.id, myNewEventData)
       .then(res => {
         
         this.showMessage = res.data.message;
-        this.message = "Create successfully";
+        this.message = "Update successfully";
         this.myClass = "alert-success";
-        this.myMessage = "Created";
+        this.myMessage = "Updated";
         
         this.getMyEvent();
       })
       .catch((error) => {
+        console.log(error.response.data.errors)
         if (error.response.status === 422 || error.response.status === 500) {
           if(error.response.status === 500){
             this.messageError.image_error =
             "Please select an image !";
+          }
+          if(error.response.data.errors.image !== undefined) {
+            this.messageError.image_error = error.response.data.errors.image;
           }
           if(error.response.data.errors.title !== undefined) {
             this.messageError.title_error =
@@ -407,9 +409,8 @@ export default {
       myEventData.append('city', this.event_data.city);
       myEventData.append('start_date', this.event_data.start_date);
       myEventData.append('end_date', this.event_data.end_date);
-      if(this.image !== null) {
-        myEventData.append('image', this.image);
-      }
+     
+      myEventData.append('image', this.image);
        console.log(myEventData);
 
       axios.post("/myevent", myEventData)
@@ -423,10 +424,15 @@ export default {
         this.getMyEvent();
       })
       .catch((error) => {
+        console.log(error.response.data.errors.image)
         if (error.response.status === 422 || error.response.status === 500) {
           if(error.response.status === 500){
             this.messageError.image_error =
             "Please select an image !";
+          }
+          if(error.response.data.errors.image !== undefined){
+            this.messageError.image_error =
+            error.response.data.errors.image;
           }
           if(error.response.data.errors.title !== undefined) {
             this.messageError.title_error =

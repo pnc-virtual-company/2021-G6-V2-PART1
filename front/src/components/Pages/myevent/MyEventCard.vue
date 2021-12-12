@@ -4,7 +4,7 @@
             <div class="card">
                 <div class="row p-3">
                     <div class="col-sm-5  d-flex justify-content-center">
-                        <img :src="url + event.image" class="img-fluid rounded" style="max-height: 150px;" alt="">
+                        <img :src="url + event.image" class="img-fluid rounded" style="max-height: 150px;" alt="No Image">
                     </div>
                    
                     <div class="col-sm-4 d-flex flex-column justify-content-between">
