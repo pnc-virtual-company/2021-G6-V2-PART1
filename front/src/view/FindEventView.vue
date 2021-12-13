@@ -1,9 +1,9 @@
 <template>
   <section>
     <div class="container p-4">
-      <h2 class="text-dark">Find and Join the event here.</h2>
+      <h2 class="text-dark">Find and Join the event here</h2>
 
-      <hr class="pb-1 bg-secondary mt-4 mb-4" />
+      <hr class="pb-1 mt-4 mb-4" />
       <!-- ########################### FIND EVENT SEARCH FORM COMPONENT ###################### -->
       <my-event-search
         @searchFindEvent="searchFindEvent"
@@ -113,4 +113,10 @@ export default {
 </script>
 
 <style>
+  hr{
+    background:#022669;
+  }
+  h2{
+    color:#020269; 
+  }
 </style>

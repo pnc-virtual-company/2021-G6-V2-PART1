@@ -37,7 +37,7 @@
           </div>
           <template #action>
             <base-button  @click="closeDailog" class="mr-3 btn btn-secondary"> Close </base-button>
-            <base-button :class="classButton"
+            <base-button :class="classButton" id="creat"
             @click="onConfirm"
             >
             {{dialogButton}} 
@@ -296,9 +296,11 @@ h3 {
   font-size: 1rem;
 }
 
-#btn-create{
+#btn-create,
+#creat{
   background: #022669;
 }
+
 #category-title{
   color: #022669;
 }

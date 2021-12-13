@@ -25,9 +25,9 @@
                             </div>
                             <div class=" d-flex flex-column justify-content-center align-items-center">
                                 <div class="mt-4">
-                                    <p class="text-muted">Start: {{event.start_date}}</p>
-                                    <p class="text-muted">End: {{event.end_date}}</p>
-                                    <p class="text-muted">Place: {{event.country}}, {{event.city}} </p>
+                                    <p class="text-muted"><strong class="text-primary">Start: </strong>  {{event.start_date}}</p>
+                                    <p class="text-muted"> <strong class="text-danger">End: </strong>  {{event.end_date}}</p>
+                                    <p class="text-muted"><strong class="text-dark">Place: </strong> {{event.country}}, {{event.city}} </p>
                                 </div>
                             </div>
                         </div>
@@ -90,7 +90,7 @@ export default {
 </script>
 <style>
     .card {
-        box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+        box-shadow: rgba(5, 1, 51, 0.5) 0px 3px 6px, rgba(7, 23, 94, 0.23) 0px 3px 6px;
     }
 
     

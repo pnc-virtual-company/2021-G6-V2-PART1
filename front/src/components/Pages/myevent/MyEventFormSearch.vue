@@ -16,7 +16,7 @@
                     />
                     <div class="input-group-prepend" >
                         <button
-                        class="btn rounded-right fa fa-remove" 
+                        class="cancel btn rounded-right fa fa-remove "
                         id="basic-addon1"
                         @click.prevent="clearName"
                         ></button>
@@ -57,9 +57,9 @@ label {
   display: block;
   margin-bottom: 0.5rem;
 }
-.btn{
+.cancel{
     background: #020269;
     color: rgb(219, 217, 211);
-
 }
+
 </style>

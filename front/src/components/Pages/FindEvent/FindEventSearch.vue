@@ -2,7 +2,7 @@
     <section> 
         <form class="form row">
             <div class="form-group  col-sm-6">
-                <label for="name">Find by name</label>
+                <label for="name">Find by Title</label>
                 <div class="input-group form-group">
                     <input
                         id="name"
@@ -16,7 +16,7 @@
                     />
                     <div class="input-group-prepend">
                         <button
-                        class="btn btn-danger rounded-right fa fa-remove"
+                        class="btn rounded-right fa fa-remove"
                         id="basic-addon1"
                         @click.prevent="clearSearchTitle"
                         ></button>
@@ -27,7 +27,7 @@
                 <label for="city">Find by city</label>
                 <div class="input-group form-group">
                     <select class="form-control" @change="searchCity" v-model="city">
-                        <option> </option>
+                        <option></option>
                         <option v-for="city of cities" :key="city" :value="city"> {{city}} </option>
                     </select>
                 </div>
@@ -76,5 +76,9 @@ label {
   font-weight: bold;
   display: block;
   margin-bottom: 0.5rem;
+}
+.btn{
+    background: #020269;
+    color: rgb(219, 217, 211);
 }
 </style>

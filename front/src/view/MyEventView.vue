@@ -15,8 +15,8 @@
 <!-- ################################ DIALOG FORM ##################################### -->
 
       <div class="d-flex justify-content-between mb-3">
-        <h2 class="text-primary">My Events</h2>
-        <base-dailog
+        <h2>My Events</h2>
+        <base-dailog 
           v-if="dialogDisplayed" 
           :title="dialogTitle"
           @close="closeDialog"
@@ -124,7 +124,7 @@
           </div>
           <template #action>
             <base-button @click="closeDialog" class="mr-3 btn btn-secondary"> Close </base-button>
-            <base-button :class="classButton"
+            <base-button :class="classButton" id="create"
             @click="onConfirm"
             >
             {{dialogButton}}
@@ -133,7 +133,7 @@
         </base-dailog>
 
         <base-button
-          class="right-man-button btn btn-primary" 
+          class=" create btn right-man-button " 
           type="submit"
           @click="showCreateMyEvent"
         >
@@ -141,7 +141,7 @@
         </base-button>
       </div>
 
-      <hr class="bg-dark pb-1">
+      <hr class="pb-1">
 
 <!-- ################################ MY EVENT FORM SEARCH ##################################### -->
 
@@ -570,6 +570,9 @@ export default {
 </script>
 
 <style scoped>
+  h2{
+    color:#020269; 
+  }
   label {
     font-weight: bold;
     display: block;
@@ -590,4 +593,10 @@ export default {
   .h2{
     color:  #020269;
   }
+  hr,
+  .create,
+  #create{
+    background:#022669;
+  }
+
 </style>
