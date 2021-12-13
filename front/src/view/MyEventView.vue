@@ -117,7 +117,7 @@
           </div>
           <template #action>
             <base-button @click="closeDialog" class="mr-3 btn btn-secondary"> Close </base-button>
-            <base-button :class="classButton" id="create"
+            <base-button :class="classButton" 
             @click="onConfirm"
             >
             {{dialogButton}}
