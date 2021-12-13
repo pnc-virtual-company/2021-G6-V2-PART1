@@ -15,7 +15,7 @@
 <!-- ################################ DIALOG FORM ##################################### -->
 
       <div class="d-flex justify-content-between mb-3">
-        <h2 class="h2">My Events</h2>
+        <h2 class="text-primary">My Events</h2>
         <base-dailog
           v-if="dialogDisplayed" 
           :title="dialogTitle"
@@ -119,106 +119,6 @@
                 </div>
               </div>
           </div>
-          <!-- <div class="event-form" v-if="dialogMode !== 'remove'">
-            <div class="form-row">
-              <div class="form-group col-sm-12">
-                <div v-if="imageToEdt === 'create' ">
-                  <div v-if="imagepreview">
-                    <img
-                      :src="imagepreview"
-                      class="img-fluid"
-                      alt=""
-                    />
-                  </div>
-                </div>
-                <div v-if="imageToEdt === 'edit' ">
-                  <div>
-                    <img
-                      :src="url + imagepreview"
-                      class="img-fluid"
-                      alt=""
-                    />
-                  </div>
-                </div>
-                
-                <label >Image</label>
-                <input id="image" type="file" hidden class="form-control mr-3" @change="imageSeleted"/>
-                <label for="image" class="fa fa-image btn btn-outline-primary p-3"></label>
-              </div> -->
-          <!-- </div> -->
-          <!-- <div v-else>
-            <h5>Are you sure you want to remove this event?</h5>
-              <div class="form-group col-sm-12">
-                <label for="category">Category</label>
-                <select id="category" v-model="event_data.categoryId" class="form-control">
-                  <option v-for="category of categories" :key="category.id" :value="category.id">
-                      {{category.name}} 
-                  </option>
-                </select>
-              </div>
-              <div class="form-group col-sm-12">
-                <label for="title">Title</label>
-                <input
-                  type="text"
-                  id="title"
-                  class="form-control"
-                  placeholder="Title"
-                  v-model="event_data.title"
-                />
-              </div>
-              <div class="form-group col-sm-6">
-                <label for="startDate">Start date and time</label>
-                <input
-                  type="datetime-local"
-                  id="startDate"
-                  class="form-control"
-                  v-model="event_data.start_date"
-                />
-              </div>
-              <div class="form-group col-sm-6">
-                <label for="endDate">End date and time</label>
-                <input
-                  type="datetime-local"
-                  id="endDate"
-                  class="form-control"
-                  v-model="event_data.end_date"
-                />
-              </div>
-              <div class="form-group col-sm-6">
-                <label for="contry">Country</label>
-                <input
-                  list="countryList"
-                  class="form-control"
-                  placeholder="Select city"
-                  v-model="event_data.country"
-                />
-                <datalist id="countryList">
-                  <option v-for="name of countryName" :key="name" class="form-control">{{name}}</option>
-                </datalist>
-              </div>
-              <div class="form-group col-sm-6">
-                <label for="city">City</label>
-                <input
-                  list="cityList"
-                  class="form-control"
-                  placeholder="Select city"
-                  v-model="event_data.city"
-                />
-                <datalist id="cityList">
-                  <option v-for="city of countries[event_data.country]" :key="city" class="form-control">{{city}}</option>
-                </datalist>
-              </div>
-              <div class="form-group col-sm-12">
-                <label for="description">Description</label>
-                <textarea
-                  id="description"
-                  class="form-control"
-                  placeholder="Description"
-                  v-model="event_data.description"
-                ></textarea>
-              </div>
-            </div>
-          </div> -->
           <div v-else>
             <h5>Are you sure you want to remove this event?</h5>
           </div>
@@ -233,7 +133,7 @@
         </base-dailog>
 
         <base-button
-          class="right-man-button btn btn-info"
+          class="right-man-button btn btn-primary" 
           type="submit"
           @click="showCreateMyEvent"
         >
@@ -687,7 +587,7 @@ export default {
     font-size: 1rem;
   }
 
-  #h2{
+  .h2{
     color:  #020269;
   }
 </style>
