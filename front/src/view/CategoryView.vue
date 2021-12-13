@@ -18,7 +18,6 @@
         <base-dailog
         v-if="dialogDissplayed"
         :title="dialogTitle"
-        :mode="dialogMode"
         @close="closeDailog"
         >
           <div v-if="dialogMode !== 'Remove'">

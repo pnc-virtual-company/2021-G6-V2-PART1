@@ -1,106 +1,121 @@
 <template>
   <section>
     <div class="container p-4">
+      <div
+        v-if="isShowMessage"
+        class="alert alert-dismissible mb-3"
+        :class="showMessage === myMessage ? myClass : 'alert-danger'"
+      >
+        <a href="#" class="close" data-dismiss="alert" aria-label="close"
+          >&times;</a
+        >
+        <strong>{{ message }}</strong>
+      </div>
       <div class="d-flex justify-content-between mb-3">
         <h2 class="text-info">My Events</h2>
         <base-dailog
           v-if="dialogDisplayed"
           :title="dialogTitle"
-          :mode="dialogMode"
           @close="closeDialog"
         >
-          <div class="event-form">
-            <div class="form-row">
-              <div class="form-group col-sm-12">
-                <img
-                    src=""
-                    class="img-fluid"
-                    alt=""
-                />
-                <label for="image">Image</label>
-                <div class="d-flex">
-                  <input id="image" type="file" class="form-control mr-3" />
-                  <button class="btn btn-primary">Upload</button>
+          <div v-if="dialogMode !== 'remove'">
+              <div class="event-form">
+                <div class="form-row">
+                  <div class="form-group col-sm-12">
+                    <div v-if="imagepreview">
+                      <img
+                          :src="imagepreview"
+                          class="img-fluid"
+                          alt=""
+                      />
+                    </div>
+                      
+                    <label >Image</label>
+                    <input id="image" type="file" hidden class="form-control mr-3" @change="imageSeleted"/>
+                    <label for="image" class="fa fa-image btn btn-outline-primary p-3"></label>
+                  </div>
+                  <div class="form-group col-sm-12">
+                    <label for="category">Category</label>
+                    
+                    <select name="category" id="category" class="form-control" v-model="event_data.categoryName">
+                      <option v-for="category of categories" :key="category.id" :value="category.id"> {{category.name}} </option>
+                    </select>
+                  </div>
+                  <div class="form-group col-sm-12">
+                    <label for="title">Title</label>
+                    <input
+                      type="text"
+                      id="title"
+                      class="form-control"
+                      placeholder="Title"
+                      v-model="event_data.title"
+                    />
+                  </div>
+                  <div class="form-group col-sm-6">
+                    <label for="startDate">Start date and time</label>
+                    <input
+                      type="datetime-local"
+                      id="startDate"
+                      class="form-control"
+                      v-model="event_data.start_date"
+                    />
+                  </div>
+                  <div class="form-group col-sm-6">
+                    <label for="endDate">End date and time</label>
+                    <input
+                      type="datetime-local"
+                      id="endDate"
+                      class="form-control"
+                      v-model="event_data.end_date"
+                    />
+                  </div>
+                  <div class="form-group col-sm-6">
+                    <label for="contry">Country</label>
+                    <input
+                      list="countryList"
+                      class="form-control"
+                      placeholder="Select city"
+                      v-model="event_data.country"
+                    />
+                    <datalist id="countryList">
+                      <option v-for="name of countryName" :key="name" class="form-control">{{name}}</option>
+                    </datalist>
+                  </div>
+                  <div class="form-group col-sm-6">
+                    <label for="city">City</label>
+                    <input
+                      list="cityList"
+                      class="form-control"
+                      placeholder="Select city"
+                      v-model="event_data.city"
+                    />
+                    <datalist id="cityList">
+                      <option v-for="city of countries[event_data.country]" :key="city" class="form-control">{{city}}</option>
+                    </datalist>
+                  </div>
+                  <div class="form-group col-sm-12">
+                    <label for="description">Description</label>
+                    <textarea
+                      id="description"
+                      class="form-control"
+                      placeholder="Description"
+                      v-model="event_data.description"
+                    ></textarea>
+                  </div>
                 </div>
               </div>
-              <div class="form-group col-sm-12">
-                <label for="category">Category</label>
-                <input
-                  list="categoryList"
-                  class="form-control"
-                  placeholder="Select category"
-                  v-model="event_data.categoryName"
-                />
-                <datalist id="categoryList">
-                  <option v-for="category of categories" :key="category.id" class="form-control"> {{category.name}} </option>
-                </datalist>
-              </div>
-              <div class="form-group col-sm-12">
-                <label for="title">Title</label>
-                <input
-                  type="text"
-                  id="title"
-                  class="form-control"
-                  placeholder="Title"
-                  v-model="event_data.title"
-                />
-              </div>
-              <div class="form-group col-sm-6">
-                <label for="startDate">Start date and time</label>
-                <input
-                  type="datetime-local"
-                  id="startDate"
-                  class="form-control"
-                  v-model="event_data.start_date"
-                />
-              </div>
-              <div class="form-group col-sm-6">
-                <label for="endDate">End date and time</label>
-                <input
-                  type="datetime-local"
-                  id="endDate"
-                  class="form-control"
-                  v-model="event_data.end_date"
-                />
-              </div>
-              <div class="form-group col-sm-6">
-                <label for="contry">Country</label>
-                <input
-                  list="countryList"
-                  class="form-control"
-                  placeholder="Select city"
-                  v-model="event_data.country"
-                />
-                <datalist id="countryList">
-                  <option v-for="name of countryName" :key="name" class="form-control">{{name}}</option>
-                </datalist>
-              </div>
-              <div class="form-group col-sm-6">
-                <label for="city">City</label>
-                <input
-                  list="cityList"
-                  class="form-control"
-                  placeholder="Select city"
-                  v-model="event_data.city"
-                />
-                <datalist id="cityList">
-                  <option v-for="city of countries[event_data.country]" :key="city" class="form-control">{{city}}</option>
-                </datalist>
-              </div>
-              <div class="form-group col-sm-12">
-                <label for="description">Description</label>
-                <textarea
-                  id="description"
-                  class="form-control"
-                  placeholder="Description"
-                  v-model="event_data.description"
-                ></textarea>
-              </div>
-            </div>
+          </div>
+          <div v-else>
+            <h5>Are you sure you want to remove this event?</h5>
           </div>
           <template #action>
-            <base-button class="right-man-button btn btn-info" type="submit">
-              Create
+            <base-button 
+            class="right-man-button" 
+            type="submit"
+            :class="classButton"
+            @click="onConfirm"
+            >
+              {{dialogButton}}
             </base-button>
           </template>
         </base-dailog>
@@ -116,8 +131,18 @@
 
       <hr class="bg-dark pb-1">
 
-      <my-event-search> </my-event-search>
-      <my-event-card v-for="event of my_events" :key="event.id" :event="event" class="mt-3"> </my-event-card>
+      <my-event-search
+      @searchName="searchEvent"
+      > </my-event-search>
+      <my-event-card 
+      v-for="event of my_events" :key="event.id" 
+      :event="event" 
+      :buttonMode="myEventMode"
+      class="mt-3"
+      @requestToDelete="showDeleteForm"
+      @requestToEdt="showEditForm"
+      > 
+      </my-event-card>
     </div>
   </section>
 </template>
@@ -151,12 +176,17 @@ export default {
       message: "",
       myClass: "",
       myMessage: "",
+      isShowMessage: false,
       myEventAction: {},
       dialogMode: "create",
       dialogDisplayed: false,
       categories: [],
       countries: {},
       countryName: [],
+      defaultImage: "../assets/null.png",
+      image: null,
+      imagepreview: null,
+      myEventMode: 'myEvent',
     };
   },
   computed: {
@@ -195,9 +225,29 @@ export default {
     },
   },
   methods: {
+    // GET MY EVENTS
+    getMyEvent() {
+      axios.get('/myevent')
+      .then(response => {
+        this.my_events = response.data.filter((event) => event.user_id === parseInt(localStorage.getItem('userId')));
+      })
+    },
     showCreateMyEvent() {
       this.dialogMode = "create";
       this.dialogDisplayed = true;
+      this.imagepreview = null;
+    },
+    showEditForm(event) {
+      this.dialogMode = 'edit';
+      this.dialogDisplayed = true;
+      console.log(event);
+    },
+    showDeleteForm(id) {
+      this.dialogMode = "remove";
+      this.dialogDisplayed = true;
+      this.myEventAction = {
+        id: id
+      }
     },
     closeDialog() {
       this.dialogDisplayed = false;
@@ -209,13 +259,76 @@ export default {
       this.event_data.city = "";
       this.event_data.description = "";
     },
+    imageSeleted(e) {
+      this.image = e.target.files[0];
+
+      let reader = new FileReader();
+      reader.readAsDataURL(this.image);
+      reader.onload = e => {
+        this.imagepreview = e.target.result;
+      };
+    },
+    addMyEvent() {
+      this.isShowMessage = true
+      let myEventData = new FormData();
+
+      myEventData.append('user_id', parseInt(localStorage.getItem("userId")));
+      myEventData.append('category_id', this.event_data.categoryName);
+      myEventData.append('title', this.event_data.title);
+      myEventData.append('description', this.event_data.description);
+      myEventData.append('country', this.event_data.country);
+      myEventData.append('city', this.event_data.city);
+      myEventData.append('start_date', this.event_data.start_date);
+      myEventData.append('end_date', this.event_data.end_date);
+      if(this.image !== null) {
+        myEventData.append('image', this.image);
+      }
+
+      axios.post("/myevent", myEventData)
+      .then(res => {
+
+        this.showMessage = res.data.message;
+        this.message = "Create successfully";
+        this.myClass = "alert-success";
+        this.myMessage = "Created";
+        // this.my_events.unshift(res.data.data)
+        // console.log(res.data.data)
+        this.getMyEvent();
+      })
+    },
+    removeMyEvent(id) {
+      this.isShowMessage = true;
+      axios.delete('/myevent/' + id)
+      .then((response) => {
+        this.my_events = this.my_events.filter(event => event.id !== id);
+        this.showMessage = response.data.message;
+        this.message = "Delete successfully";
+        this.myClass = "alert-success";
+        this.myMessage = "Deleted";
+      })
+    },
+    onConfirm() {
+      if(this.dialogMode === 'create') {
+        this.addMyEvent();
+      } else if (this.dialogMode === 'remove') {
+        this.removeMyEvent(this.myEventAction.id);
+      }
+      this.closeDialog();
+    },
+    searchEvent(name) {
+      if(name !== "") {
+        axios.get('/myevent/search/' + name)
+        .then(res => {
+          this.my_events = res.data.filter(event => event.user_id === parseInt(localStorage.getItem("userId")));
+        })
+      } else {
+        this.getMyEvent();
+      }
+        
+    }
   },
   mounted() {
-    //   GET CATEGORY FROM BACKEND
-    axios.get('/category')
-    .then(res => {
-        this.categories = res.data
-    })
+    this.getMyEvent();
     // GET COUNTRY FROM BACKEND
     axios.get('/countries')
     .then(res => {
@@ -224,11 +337,12 @@ export default {
             this.countryName.push(count)
         }
     })
-    // GET MY EVENTS
-    axios.get('/myevent')
-    .then(response => {
-        this.my_events = response.data
-    })
+    //   GET CATEGORY FROM BACKEND
+      axios.get('/category')
+      .then(res => {
+          this.categories = res.data
+      })
+    
   },
 };
 </script>

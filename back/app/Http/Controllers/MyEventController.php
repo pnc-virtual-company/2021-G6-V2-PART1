@@ -15,14 +15,14 @@ class MyEventController extends Controller
      */
     public function getEvent()
     {
-        return MyEvent::with(["category", "user"])->latest()->get();
+        return MyEvent::with(["category", "user", "join"])->latest()->get();
     }
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
-     */
+     */ 
     public function createEvent(Request $request)
     {
         $request->validate([
@@ -113,9 +113,19 @@ class MyEventController extends Controller
     {
         $isDeleted = MyEvent::destroy($id);
         if($isDeleted === 1){
-            return response()->json(["message" => "Event deleted success"],200);
+            return response()->json(["message" => "Deleted"],200);
         }else{
             return response()->json(["message" => "ID not found"],401);
         }
+    }
+
+    public function search($title)
+    {
+        return MyEvent::where('title','like', '%'. $title . '%')->with(["category", "user", "join"])->get();
+    }
+
+    public function searchCity($city)
+    {
+        return MyEvent::where('city','like', '%'. $city . '%')->with(["category", "user", "join"])->get();
     }
 }

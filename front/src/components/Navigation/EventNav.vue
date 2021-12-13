@@ -70,7 +70,8 @@ body {
     font-weight: normal;
 }
 .router-link-active {
-    text-decoration: 5px underline white;
+    text-decoration: 3px underline white;
+    /* background: blue; */
     border-radius: 2px;
 }
 </style>

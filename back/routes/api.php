@@ -6,6 +6,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\MyEventController;
 use App\Http\Controllers\CountryController;
+use App\Http\Controllers\JoinController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -47,8 +48,18 @@ Route::post('/myevent',[MyEventController::class, "createEvent"]);
 Route::put('/myevent/{id}',[MyEventController::class, "updateEvent"]);
 Route::delete('/myevent/{id}',[MyEventController::class, "destroyEvent"]);
 
+Route::get('/myevent/search/{title}',[MyEventController::class, "search"]);
+Route::get('/myevent/searchCity/{city}',[MyEventController::class, "searchCity"]);
+
 // Get Country Route
 
 Route::get('/countries', [CountryController::class, 'getCountries']);
+
+
+// JOIN ROUTE
+
+Route::get('/join', [JoinController::class, 'index']);
+Route::post('/join', [JoinController::class, 'store']);
+Route::delete('/join/{id}', [JoinController::class, 'destroy']);
 
 

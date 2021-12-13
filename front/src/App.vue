@@ -102,7 +102,7 @@ export default {
     };
 
     if (localStorage.userId) {
-      this.$router.push('/home');
+      // this.$router.push('/home');
       axios.get('/users/' + localStorage.userId)
       .then(response => {
         this.user = response.data;
