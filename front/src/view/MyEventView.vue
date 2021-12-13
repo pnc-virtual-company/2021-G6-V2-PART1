@@ -290,13 +290,9 @@ export default {
 // #################################### UPDATE EVENT FUNCTION ########################
   updateMyEvent(previousData) {
     
-    // let newImage = new FormData();
-    // newImage.append(this.image);
-
     let myNewEventData = {
       user_id: previousData.user_id,
       category_id: this.event_data.categoryId,
-      image: this.image,
       title: this.event_data.title,
       description: this.event_data.description,
       country: this.event_data.country,
