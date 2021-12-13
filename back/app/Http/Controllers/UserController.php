@@ -41,7 +41,7 @@ class UserController extends Controller
     }
     
     public function login(Request $request)
-    {
+    { 
         //check email
         $user = User::where('email', $request->email)->first();
 

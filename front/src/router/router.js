@@ -2,7 +2,6 @@ import {createRouter, createWebHistory} from 'vue-router'
 
 import Signin from '../components/Authentication/Signin.vue'
 import Register from '../components/Authentication/Signup.vue'
-import Home from '../components/Pages/Home.vue'
 import CategoryView from '../view/CategoryView.vue'
 import MyEventView from '../view/MyEventView.vue'
 import FindEventView from '../view/FindEventView.vue'
@@ -20,10 +19,6 @@ const routes = [
     {
         path: '/signin',
         component: Signin
-    },
-    {
-        path: '/home',
-        component: Home
     },
     {
         path: '/my-event',

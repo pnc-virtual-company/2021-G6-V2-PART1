@@ -7,12 +7,15 @@
     :messageErrorLogin="message_error_login"
     >
     </router-view>
+    <!-- <category-view> </category-view>
+    <my-event-card></my-event-card> -->
   </section>
+
 </template>
 <script>
 import axios from "./axios-http.js";
-
 import Navigation from './components/Navigation/EventNav.vue'
+
 export default {
   components: {
     'navbar': Navigation,
@@ -48,7 +51,7 @@ export default {
       axios
         .post("/register", dataUser)
         .then((response) => {
-          this.$router.push("/home");
+          this.$router.push("/my-event");
           this.user = response.data.user;
           localStorage.setItem("userId", response.data.user.id);
           this.isRegistered = true;
@@ -71,13 +74,15 @@ export default {
       axios
         .post("/login", form_data)
         .then((response) => {
-          if (response.data.message !== "logined") {
+          if (response.data.message !== "logined") { 
             this.message_error_login = true;
+            console.log('cannot login')
           } else {
-            this.$router.push("/home");
+            this.$router.push("/my-event");
             this.user = response.data.user;
             localStorage.setItem("userId", response.data.user.id);
             this.message_error_login = false;
+
           }
         });
 
@@ -92,12 +97,12 @@ export default {
     window.onpopstate  = () => {
       if(localStorage.getItem('userId') !== null && (this.$route.path === '/signin' || this.$route.path === '/' || this.$route.path === '/register')
       ) {
-        this.$router.push('/home');
+        this.$router.push('/my-event');
       }
     };
   
     if (localStorage.userId) {
-      this.$router.push('/home');
+      this.$router.push('/my-event');
       axios.get('/users/' + localStorage.userId)
       .then(response => {
         this.user = response.data;

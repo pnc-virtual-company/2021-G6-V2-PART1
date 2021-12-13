@@ -1,6 +1,7 @@
 <template>
   <section>
-    <h1 class="text-center p-4 font-weight-light">My Events Sign In</h1>
+    <div class="contain-body">
+        <h1 class="text-center p-4 font-weight-light">My Events Sign In</h1>
     <div class="form-field">
         <form action="#" @submit.prevent="addMyLogin">
             <div class="form-group text-style">
@@ -28,11 +29,13 @@
                 />
             </div>
             
-            <button type="submit" class="btn btn-primary form-control">Login</button>
+            <button type="submit" class="btn form-control">Login</button>
         </form>
         
     </div>
     <p class="text-center mt-2">Don't have an account yet? <router-link to="/register">Register</router-link></p>
+    </div>
+    
   </section>
 </template>
 
@@ -57,17 +60,26 @@ export default {
 </script>
 
 <style scoped>
-body {
-    background: url('../../assets/bg-form.gif');
+
+.contain-body {
+    background: url('../../assets/lastImg.jpg');
     background-size: cover;
-    background-position: center center;
+    background-position: center center;  
+    width: auto;
+    height: 100vh;
+    padding-top: 100px;
+    
 }
 .form-field {
-  width: 40%;
+  width: 35%;
   margin: auto;
+  box-shadow: 0px 2px 16px 11px rgba(30, 48, 54, 0.67);
+  background: #e7eef0;
   border-radius: 10px;
   padding: 20px;
-  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  opacity: 0.8;
+  position: center center;
+ 
 }
 .img-icon {
     margin-left: 40px;
@@ -76,8 +88,8 @@ body {
 hr {
     font-weight: bolder;
     width: 25%;
-    background: black;
-    border: 1px solid black;
+    background: #020269;
+    border: 1px solid #020269;
 }
 .text-style {
     display: flex;
@@ -85,13 +97,18 @@ hr {
     margin-top: 20px;
 }
 
-.btn-text {
+.btn-text { 
     border: none;
-    background: rgba(255, 255, 255, 0.81);
+    background: rgba(207, 204, 204, 0.81);
+    color: #020269;
     border-radius: 10px;
     font-family: Arial, Helvetica, sans-serif;
     padding: 7px;
     display: flex;
     align-items: center;
+}
+button{
+    background: #020269;
+    color: white;
 }
 </style>

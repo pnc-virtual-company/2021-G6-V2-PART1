@@ -1,13 +1,22 @@
 <template>
   <section>
-    <h1 class="text-center p-4 font-weight-light">My Events Registration</h1>
+    <div class="contain-body">
+         <!-- <h1 class="text-center p-4 font-weight-light">My Events Registration</h1> -->
     <div class="form-field">
         <form action="#" @submit.prevent="addUserInfo">
-            <div class="form-group inser-img">
-                <img src="../../assets/avatar.png" alt="" width="100" height="100" class="rounded">
-                <input type="file" name="" id="image" class="d-none">
-                <label for="image" class="fa fa-plus-circle btn btn-outline-info img-icon"></label>
+            <div class="form-group inser-img d-flex">
+                 <div v-if="imagepreview">
+                     <img :src="imagepreview" class="figure-img img-fluid rounded"  width="100" height="100">
+                 </div>
+                 <div v-else>
+                    <img src="../../assets/avatar.png" alt="" width="100" height="100" class="rounded">
+                 </div>
+                <div class="m-auto">
+                    <input type="file" name="" id="image" class="d-none" @change="imageSeleted">
+                    <label for="image" class="fa fa-plus-circle btn btn-outline-info img-icon"></label>
+                </div>
             </div>
+           
             <div class="form-row">
                 <div class="form-group col-md-6">
                     <input
@@ -70,7 +79,9 @@
             <button class="btn btn-primary form-control" >Register now</button>
         </form>
     </div>
-    <p class="text-center mt-2">Have an account? <router-link to="/signin">Sign in</router-link></p>
+    <p class="text-center mt-2">Have you already an account? <router-link to="/signin">Sign in</router-link></p>
+    </div>
+   
   </section>
 </template>
 
@@ -87,10 +98,20 @@ export default {
                 password: '',
                 comfirm_password: ''
             },
+            image:null,
+            imagepreview : null,
             
         }
     },
     methods: {
+        imageSeleted(e){
+            this.image = e.target.files[0];
+            let reader = new FileReader();
+            reader.readAsDataURL(this.image);
+            reader.onload = e =>{
+                this.imagepreview = e.target.result;
+            }
+        },
         addUserInfo() {
             this.$emit('adduser', this.signup_form);
         },
@@ -100,20 +121,34 @@ export default {
 </script>
 
 <style scoped>
-body {
-    background: url('../../assets/bg-form.gif');
+
+.contain-body {
+    background: url('../../assets/lastImg.jpg');
     background-size: cover;
-    background-position: center center;
+    background-position: center center;  
+    width: auto;
+    height: 100vh;
+    padding-top: 100px;
+    
 }
 .form-field {
-  width: 40%;
+  width: 35%;
   margin: auto;
+  box-shadow: 0px 2px 16px 11px rgba(30, 48, 54, 0.67);
+  background: #e7eef0;
   border-radius: 10px;
   padding: 20px;
-  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  opacity: 0.8;
+  position: center center;
+ 
 }
 .img-icon {
     margin-left: 40px;
     font-size: 20px;
+}
+
+button{
+    background: #020269;
+    color: white;
 }
 </style>
