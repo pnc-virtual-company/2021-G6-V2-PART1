@@ -4,11 +4,13 @@
             <h2 class="text-dark">Find and Join the event here.</h2>
             
             <hr class="pb-1 bg-secondary mt-4 mb-4">
-
+<!-- ########################### FIND EVENT SEARCH FORM COMPONENT ###################### -->
             <my-event-search
             @searchFindEvent="searchFindEvent"
             @searchEventCity="findEventByCity"
             > </my-event-search>
+
+<!-- ########################### FIND EVENT CARD COMPONENT ###################### -->
             <find-event-card 
             v-for="event of events" :key="event.id" 
             :event="event" 
@@ -39,12 +41,14 @@ export default {
         }
     },
     methods: {
+// ############################# GET EVENT FUNCTION #############################
         getFindEventData() {
             axios.get('/myevent')
             .then(res => {
                 this.events = res.data.filter(event => event.user_id !== parseInt(localStorage.getItem("userId")));
             })
         },
+// ############################# FIND EVENT BY TITLE FUNCTION #############################
         searchFindEvent(title) {
             if(title !== "") {
                axios.get('/myevent/search/' + title)
@@ -56,6 +60,7 @@ export default {
             }
                 
         },
+// ############################# FIND EVENT BY CITY FUNCTION #############################
         findEventByCity(city) {
             if(city !== "") {
                axios.get('/myevent/searchCity/' + city)
@@ -66,6 +71,7 @@ export default {
                 this.getFindEventData();
             }
         },
+// ############################# JOIN EVENT  FUNCTION #############################
         joinEvent(event) {
             let joinData = {
                 user_id: parseInt(localStorage.getItem("userId")),
@@ -76,6 +82,7 @@ export default {
                 this.getFindEventData();
             })
         },
+// ############################# QUIT EVENT FUNCTION ###############################
         quitEvent(event) {
             let joinId = "";
             for(let join of event.join) {

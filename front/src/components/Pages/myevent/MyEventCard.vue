@@ -5,8 +5,9 @@
                 <div class="card">
                     <div class="row p-3">
                         <div class="col-sm-5  d-flex justify-content-start">
-                            <img :src="url + event.image" class="img-fluid rounded" style="max-height: 200px; width: 70%;" alt="">
+                            <img  :src="event.image !== '' ? url + event.image : url + 'empty.jpg' " class="img-fluid rounded" style="max-height: 200px; width: 70%;" alt="">
                         </div>
+                        <img src="" alt="">
                         <div class="col-sm-4 d-flex flex-column justify-content-between">
                             <h5>{{event.category.name}}</h5>
                             <h3>{{event.title}}</h3>
@@ -83,6 +84,16 @@ export default {
             }
         }
     },
+    // emits: ['requestEdit', 'requestRemove'],
+    // methods: {
+    //     remove(id) {
+    //         this.$emit('requestRemove', id);
+    //     },
+    //     edit(myevent) {
+    //         this.$emit('requestEdit', myevent);
+    //     }
+    // },
+    
 };
 </script>
 <style>

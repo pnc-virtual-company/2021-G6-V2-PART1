@@ -51,6 +51,7 @@ Route::delete('/myevent/{id}',[MyEventController::class, "destroyEvent"]);
 Route::get('/myevent/search/{title}',[MyEventController::class, "search"]);
 Route::get('/myevent/searchCity/{city}',[MyEventController::class, "searchCity"]);
 
+  
 // Get Country Route
 
 Route::get('/countries', [CountryController::class, 'getCountries']);

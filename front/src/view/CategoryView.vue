@@ -13,7 +13,7 @@
       </div>
 
       <div class="d-flex justify-content-between mb-2">
-        <h2 class="text-info">Category</h2>
+        <h2 id="category-title">Category</h2>
 
         <base-dailog
         v-if="dialogDissplayed"
@@ -40,14 +40,14 @@
             <base-button :class="classButton"
             @click="onConfirm"
             >
-            {{dialogButton}}
+            {{dialogButton}} 
             </base-button>
             
           </template>
         </base-dailog>
 
         <base-button
-          class="right-man-button btn btn-info"
+          class="right-man-button btn" id="btn-create"
           type="submit"
           @click="showCreateForm"
         >
@@ -55,7 +55,7 @@
         </base-button>
       </div>
 
-      <hr class="bg-primary pb-1" />
+      <hr class="pb-1" />
 
       <category-form-search @addName="searchCategory"> </category-form-search>
       <category-card class="mt-3"
@@ -81,10 +81,10 @@ export default {
     'base-button': BaseButton,
     'base-dailog': BaseDialog,
     'category-card': CategoryCard
-    },
+  },
   data() {
     return {
-      name: '',
+      name: '', 
       categories: [],
       message: "",
       isShowMessage: false,
@@ -98,6 +98,7 @@ export default {
     };
   },
   computed: {
+// ######################### GET DIALOG TITLE #########################################
     dialogTitle() {
  
       let message = "";
@@ -110,6 +111,8 @@ export default {
       }
       return message;
     },
+
+// ######################## GET DIALOG BUTTON NAME ###################################
     dialogButton() {
     
       let message = "";
@@ -122,6 +125,7 @@ export default {
       }
       return message;
     },
+// ########################## GET BUTTON CLASS STYLE ################################
     classButton() {
   
       let message = "";
@@ -136,11 +140,13 @@ export default {
     }
   },
   methods: {
+// ########################## GET CATEGORY DATA FUNCTION ################################
     getCategory() {
       axios.get("/category").then((res) => {
         this.categories = res.data;
       });
     },
+// ########################## SEARCH CATEGORY BY NAME FUNCTION ###########################
     searchCategory(name) {
       if (name !== "") {
         axios.get("/category/search/" + name).then((res) => {
@@ -150,14 +156,19 @@ export default {
         this.getCategory();
       }
     },
+// ########################## SHOW CREATE DIALOG FORM FUNCTION ################################
     showCreateForm() {
       this.dialogMode = 'create';
       this.dialogDissplayed = true
     },
+
+// ########################## CLOSE DIALOG FORM FUNCTION ################################
     closeDailog() {
       this.dialogDissplayed = false
       this.name = '';
     },
+
+// ########################## ADD CATEGORY FUNCTION ################################
     addCategory(name) {
       this.isShowMessage = true;
       axios
@@ -175,6 +186,7 @@ export default {
         });
     },
     
+// ########################## DELETE CATEGORY FUNCTION ################################
     deleteCategory(id) {
       this.isShowMessage = true;
       axios.delete('/category/' + id)
@@ -184,8 +196,14 @@ export default {
         this.message = "Delete successfully";
         this.myClass = "alert-success";
         this.myMessage = "Deleted";
+
+        console.log("Deleted");
       })
+
+      this.closeDailog();
     },
+
+// ########################## SHOW DELETE DIALOG FORM FUNCTION ################################
     showDeleteDialog(id) {
       this.dialogMode = 'Remove';
       this.dialogDissplayed = true
@@ -193,6 +211,8 @@ export default {
         id: id
       }
     },
+
+// ########################## SHOW EDIT DIALOG FROM FUNCTION ################################
     showEditForm(id, name) {
       this.dialogMode = 'edit';
       this.dialogDissplayed = true;
@@ -204,6 +224,7 @@ export default {
       this.name = this.categoryToEdit.name
       console.log(this.id, this.name)
     },
+// ########################## UPDATE CATEGORY FUNCTION ################################
     updateCategory(id) {
       this.isShowMessage = true;
       let newData = {
@@ -223,6 +244,7 @@ export default {
         this.message = error.response.data.errors.name[0];
       })
     },
+// ########################## ONCONFIRM FUNCTION ################################
     onConfirm() {
       if(this.dialogMode === 'create') {
         this.addCategory(this.name);
@@ -272,5 +294,15 @@ textarea:focus {
 h3 {
   margin: 0.5rem 0;
   font-size: 1rem;
+}
+
+#btn-create{
+  background: #022669;
+}
+#category-title{
+  color: #022669;
+}
+hr{
+  background:#022669;
 }
 </style>

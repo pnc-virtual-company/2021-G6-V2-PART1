@@ -13,7 +13,7 @@
                 />
                 <div class="input-group-prepend">
                     <button
-                    class="btn btn-primary rounded-right fa fa-remove"
+                    class="btn rounded-right fa fa-remove text-white" if
                     id="basic-addon1"
                     @click.prevent="clearName"
                     ></button>
@@ -46,5 +46,7 @@ export default {
 </script>
 
 <style scoped>
-
+    #basic-addon1{
+         background:#022669;
+    }
 </style>

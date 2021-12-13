@@ -51,7 +51,7 @@ export default {
       axios
         .post("/register", dataUser)
         .then((response) => {
-          this.$router.push("/home");
+          this.$router.push("/my-event");
           this.user = response.data.user;
           localStorage.setItem("userId", response.data.user.id);
           this.isRegistered = true;
@@ -78,7 +78,7 @@ export default {
             this.message_error_login = true;
             console.log('cannot login')
           } else {
-            this.$router.push("/home");
+            this.$router.push("/my-event");
             this.user = response.data.user;
             localStorage.setItem("userId", response.data.user.id);
             this.message_error_login = false;
@@ -97,12 +97,12 @@ export default {
     window.onpopstate  = () => {
       if(localStorage.getItem('userId') !== null && (this.$route.path === '/signin' || this.$route.path === '/' || this.$route.path === '/register')
       ) {
-        this.$router.push('/home');
+        this.$router.push('/my-event');
       }
     };
 
     if (localStorage.userId) {
-      // this.$router.push('/home');
+      this.$router.push('/my-event');
       axios.get('/users/' + localStorage.userId)
       .then(response => {
         this.user = response.data;
