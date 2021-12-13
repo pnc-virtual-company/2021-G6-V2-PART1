@@ -11,7 +11,6 @@
         >
         <strong>{{ message }}</strong>
       </div>
-
       <div class="d-flex justify-content-between mb-3">
         <h2 class="text-info">My Events</h2>
         <base-dailog
@@ -19,15 +18,26 @@
           :title="dialogTitle"
           @close="closeDialog"
         >
-          <div class="event-form">
+          <div class="event-form" v-if="dialogMode !== 'remove'">
             <div class="form-row">
               <div class="form-group col-sm-12">
-                <div v-if="imagepreview" class="bg-primary">
-                  <img
-                    :src="imagepreview"
-                    class="img-fluid"
-                    alt=""
-                  />
+                <div v-if="imageToEdt === 'create' ">
+                  <div v-if="imagepreview">
+                    <img
+                      :src="imagepreview"
+                      class="img-fluid"
+                      alt=""
+                    />
+                  </div>
+                </div>
+                <div v-if="imageToEdt === 'edit' ">
+                  <div>
+                    <img
+                      :src="url + imagepreview"
+                      class="img-fluid"
+                      alt=""
+                    />
+                  </div>
                 </div>
                 
                 <label >Image</label>
@@ -105,11 +115,10 @@
               </div>
             </div>
           </div>
-
+          <div v-else>
+            <h5>Are you sure you want to remove this event?</h5>
+          </div>
           <template #action>
-            <!-- <base-button class="right-man-button btn btn-info" type="submit">
-              Create
-            </base-button> -->
             <base-button @click="closeDialog" class="mr-3 btn btn-secondary"> Close </base-button>
             <base-button :class="classButton"
             @click="onConfirm"
@@ -134,12 +143,12 @@
         @addSearchEvent="searchEvent"
         :cities="cities" > 
       </my-event-search>
-
-      <my-event-card  v-for="event of my_events" 
-        :key="event.id" :event="event"
-        class="mt-3"  > 
-      </my-event-card>
-
+      <my-event-card class="mt-3" v-for="event of my_events" 
+        :key="event.id" 
+        :event="event"  
+        @requestRemove="showDeleteDialog"
+        @requestEdit="showEditForm"
+      > </my-event-card>
     </div>
   </section>
 </template>
@@ -148,7 +157,6 @@
 import axios from '../axios-http.js';
 import MyEventCard from "../components/Pages/myevent/MyEventCard.vue";
 import MyEventFormSearch from "../components/Pages/myevent/MyEventFormSearch.vue";
-
 import BaseButton from "../components/UI/BaseButton.vue";
 import BaseDialog from "../components/UI/BaseDialog.vue";
 
@@ -196,7 +204,10 @@ export default {
         start_date_error: "",
         end_date_error: "",
 
-      }
+      },
+
+      imageToEdt: 'create',
+      url : 'http://localhost:8000/storage/images/events/',
 
     };
   },
@@ -236,31 +247,143 @@ export default {
     },
   },
   methods: {
+
+// ####################################   GET MY EVENTS   ###############################
     getMyEvent() {
-      // GET MY EVENTS
       axios.get('/myevent')
       .then(response => {
           this.my_events = response.data
           // console.log(this.my_events);
       })
     },
-
+// ####################################   SHOW CREATE FORM WHEN CLICK ON ADD EVENT ########################
     showCreateMyEvent() {
       this.dialogMode = "create";
       this.dialogDisplayed = true;
+      this.imagepreview = null;
     },
+// ####################################   SHOW CREATE FORM WHEN CLICK ON ADD EVENT ########################
+    showEditForm(eventData) {
+      this.imageToEdt = 'edit';
+      this.dialogMode = 'edit';
+      this.dialogDisplayed = true;
+      this.myEventAction = {
+        id: eventData.id,
+        category_id: eventData.categories_id,
+        user_id: eventData.user_id,
+        image: eventData.image,
+        title: eventData.title,
+        description: eventData.description,
+        country: eventData.country,
+        city: eventData.city,
+        start_date: eventData.start_date,
+        end_date: eventData.end_date
+      }
+
+      this.event_data.categoryId = eventData.category.id;
+
+      this.event_data.title = eventData.title;
+      this.event_data.description = eventData.description;
+      this.event_data.start_date = eventData.start_date;
+      this.event_data.end_date = eventData.end_date;
+      this.event_data.country = eventData.country;
+      this.event_data.city = eventData.city;
+
+      this.imagepreview = eventData.image;
+    },
+
+// #################################### UPDATE EVENT FUNCTION ########################
+  updateMyEvent(previousData) {
+    
+    let myNewEventData = {
+      user_id: previousData.user_id,
+      category_id: this.event_data.categoryId,
+      title: this.event_data.title,
+      description: this.event_data.description,
+      country: this.event_data.country,
+      city: this.event_data.city,
+      start_date: this.event_data.start_date,
+      end_date: this.event_data.end_date,
+    }
+      
+      axios.put("/myevent/" + previousData.id, myNewEventData)
+      .then(res => {
+        
+        this.showMessage = res.data.message;
+        this.message = "Update successfully";
+        this.myClass = "alert-success";
+        this.myMessage = "Updated";
+        
+        this.getMyEvent();
+      })
+      .catch((error) => {
+        console.log(error.response.data.errors)
+        if (error.response.status === 422 || error.response.status === 500) {
+          if(error.response.status === 500){
+            this.messageError.image_error =
+            "Please select an image !";
+          }
+          if(error.response.data.errors.image !== undefined) {
+            this.messageError.image_error = error.response.data.errors.image;
+          }
+          if(error.response.data.errors.title !== undefined) {
+            this.messageError.title_error =
+            error.response.data.errors.title;
+          }
+          if (error.response.data.errors.description !== undefined) {
+            this.messageError.description_error = 
+            error.response.data.errors.description;
+          } 
+
+          if (error.response.data.errors.country !== undefined) {
+            this.messageError.country_error =
+            error.response.data.errors.country;
+          }
+          if (error.response.data.errors.start_date) {
+            this.messageError.start_date_error =
+            error.response.data.errors.start_date;
+          }
+          if (error.response.data.errors.end_date) {
+            this.messageError.end_date_error =
+            error.response.data.errors.end_date;
+          }
+        }
+
+        this.message = this.messageError.image_error + "\n" +
+        this.messageError.title_error + "\n" + 
+        this.messageError.description_error + "\n" + 
+        this.messageError.country_error + "\n" + 
+        this.messageError.start_date_error + "\n" + 
+        this.messageError.end_date_error;
+      });
+      
+      this.isShowMessage = true;
+  },
+
+// ################################### CLOSE FORM FUNCTION ##################################
 
     closeDialog() {
       this.dialogDisplayed = false;
 
-      this.imagepreview = null,
       this.event_data.categoryId = "";
       this.event_data.title = "";
       this.event_data.start_date = "";
       this.event_data.end_date = "";
+      this.event_data.country = "";
       this.event_data.city = "";
       this.event_data.country = "";
       this.event_data.description = "";
+
+      this.image = null;
+      this.imagepreview = null;
+    },
+// ################################# SHOW DELETE DIALOG WHEN CLICK ON BUTTON REMOVE ##########################
+    showDeleteDialog(id) {
+      this.dialogMode = 'remove';
+      this.dialogDisplayed = true
+      this.myEventAction = {
+        id: id
+      }
     },
 
 // SEARCH BY TITLE AND BY CITY ========================================================================================
@@ -280,9 +403,21 @@ export default {
     }
   },
 
-  
-   
   // Add Event Card===================================================================
+// ################################# DELETE MY EVENT FUNCTION ########################################
+    deleteMyEvent(id) {
+      this.isShowMessage = true;
+      axios.delete('/myevent/' + id)
+      .then((response) => {
+        this.my_events = this.my_events.filter(event => event.id !== id);
+        this.showMessage = response.data.message;
+        this.message = "Delete successfully";
+        this.myClass = "alert-success";
+        this.myMessage = "Deleted";
+      })
+      console.log(id);
+    },
+//  ########################################### ADD NEW EVENT FUNCTION #################################
     addMyEvent() {
       let myEventData = new FormData();
 
@@ -294,13 +429,13 @@ export default {
       myEventData.append('city', this.event_data.city);
       myEventData.append('start_date', this.event_data.start_date);
       myEventData.append('end_date', this.event_data.end_date);
-      if(this.image !== null) {
-        myEventData.append('image', this.image);
-      }
+     
+      myEventData.append('image', this.image);
        console.log(myEventData);
 
       axios.post("/myevent", myEventData)
       .then(res => {
+        
         this.showMessage = res.data.message;
         this.message = "Create successfully";
         this.myClass = "alert-success";
@@ -309,23 +444,37 @@ export default {
         this.getMyEvent();
       })
       .catch((error) => {
-        if (error.response.status === 422) {
+        console.log(error.response.data.errors.image)
+        if (error.response.status === 422 || error.response.status === 500) {
+          if(error.response.status === 500){
+            this.messageError.image_error =
+            "Please select an image !";
+          }
           if(error.response.data.errors.image !== undefined){
-             this.messageError.image_error =
+            this.messageError.image_error =
             error.response.data.errors.image;
           }
-         
-          this.messageError.title_error =
+          if(error.response.data.errors.title !== undefined) {
+            this.messageError.title_error =
             error.response.data.errors.title;
-          this.messageError.description_error = 
+          }
+          if (error.response.data.errors.description !== undefined) {
+            this.messageError.description_error = 
             error.response.data.errors.description;
-          this.messageError.country_error =
-            error.response.data.errors.country;
-          this.messageError.start_date_error =
-            error.response.data.errors.start_date;
-          this.messageError.end_date_error =
-            error.response.data.errors.end_date;
+          } 
 
+          if (error.response.data.errors.country !== undefined) {
+            this.messageError.country_error =
+            error.response.data.errors.country;
+          }
+          if (error.response.data.errors.start_date) {
+            this.messageError.start_date_error =
+            error.response.data.errors.start_date;
+          }
+          if (error.response.data.errors.end_date) {
+            this.messageError.end_date_error =      
+            error.response.data.errors.end_date;       
+          }
         }
 
         this.message = this.messageError.image_error + "\n" +
@@ -334,14 +483,14 @@ export default {
         this.messageError.country_error + "\n" + 
         this.messageError.start_date_error + "\n" + 
         this.messageError.end_date_error;
-
-        // console.log(this.message);
       });
       
       this.isShowMessage = true;
     },
-
+// ###################################### GET IMAGE FILE AND DISPLAY IMAGE ON FORM #############################
     imageSeleted(e) {
+
+      this.imageToEdt = 'create';
       this.image = e.target.files[0];
 
       let reader = new FileReader();
@@ -350,14 +499,14 @@ export default {
         this.imagepreview = e.target.result;
       };
     },
-
+// ####################################### ON CONFIRM FUNCTION ####################################################
     onConfirm() {
       if(this.dialogMode === 'create') {
         this.addMyEvent(this.event_data);
       } else if (this.dialogMode === 'edit') {
-        this.updateEvent(this.myEventAction.id);
-      } else if(this.dialogMode === 'Remove') {
-        this.deleteEvent(this.myEventAction.id)
+        this.updateMyEvent(this.myEventAction);
+      } else if(this.dialogMode === 'remove') {
+        this.deleteMyEvent(this.myEventAction.id)
       }
 
       this.closeDialog();
@@ -365,13 +514,14 @@ export default {
   },
 
   mounted() {
+// ###################################### CALL GET MY EVENT FUNCTION ##############################################
     this.getMyEvent();
-    //   GET CATEGORY FROM BACKEND
+// ##################################### GET CATEGORY FORM BACKEND ################################################
     axios.get('/category')
     .then(res => {
       this.categories = res.data
     })
-    // GET COUNTRY FROM BACKEND
+// #################################### GET COUNTRY FROM BACKEND ##################################################
     axios.get('/countries')
     .then(res => {
         this.countries = res.data

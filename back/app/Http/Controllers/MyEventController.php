@@ -36,13 +36,18 @@ class MyEventController extends Controller
             
         ]);
 
-        $request->file('image')->store('public/images/events');    
+           
 
         $myevent = new MyEvent();
         $myevent->user_id = $request->user_id;
         $myevent->category_id = $request->category_id;
         $myevent->image = $request->image;
-        $myevent->image = $request->file('image')->hashName();
+        if($request->image !== null) {
+            $request->file('image')->store('public/images/events');
+            $myevent->image = $request->file('image')->hashName();
+        } else {
+            $myevent->image = "";
+        }
         $myevent->title = $request->title;
         $myevent->description = $request->description;
         $myevent->country = $request->country;
@@ -75,7 +80,6 @@ class MyEventController extends Controller
     {
        
         $request->validate([
-            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:1999',
             'title' => 'required',
             'description' => 'required',
             'country' => 'required',
@@ -85,13 +89,9 @@ class MyEventController extends Controller
             
         ]);
 
-        $request->file('image')->store('public/images/profiles');    
-
         $myevent = MyEvent::findOrFail($id);
         $myevent->user_id = $request->user_id;
         $myevent->category_id = $request->category_id;
-        $myevent->image = $request->image;
-        $myevent->image = $request->file('image')->hashName();
         $myevent->title = $request->title;
         $myevent->description = $request->description;
         $myevent->country = $request->country;
@@ -113,7 +113,7 @@ class MyEventController extends Controller
     {
         $isDeleted = MyEvent::destroy($id);
         if($isDeleted === 1){
-            return response()->json(["message" => "Event deleted success"],200);
+            return response()->json(["message" => "Deleted"],200);
         }else{
             return response()->json(["message" => "ID not found"],401);
         } 

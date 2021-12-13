@@ -4,7 +4,7 @@
             <div class="card">
                 <div class="row p-3">
                     <div class="col-sm-5  d-flex justify-content-center">
-                        <img :src="url + event.image" class="img-fluid rounded" alt="">
+                        <img :src="url + event.image" class="img-fluid rounded" style="max-height: 150px;" alt="No Image">
                     </div>
                    
                     <div class="col-sm-4 d-flex flex-column justify-content-between">
@@ -15,8 +15,8 @@
                     </div>
                     <div class="col-sm-3 d-flex flex-column justify-content-around">
                         <div class="btn-action d-flex justify-content-end">
-                            <button class="btn btn-danger fa fa-remove mr-3"></button>
-                            <button class="btn btn-success fa fa-pencil"></button>
+                            <button class="btn btn-danger fa fa-remove mr-3" @click="remove(event.id)"></button>
+                            <button class="btn btn-success fa fa-pencil" @click="edit(event)"></button>
                         </div>
                         <div class=" d-flex flex-column justify-content-center align-items-center">
                             <div class="mt-4">
@@ -37,6 +37,15 @@ export default {
     data() {
         return {
             url : 'http://localhost:8000/storage/images/events/',
+        }
+    },
+    emits: ['requestEdit', 'requestRemove'],
+    methods: {
+        remove(id) {
+            this.$emit('requestRemove', id);
+        },
+        edit(myevent) {
+            this.$emit('requestEdit', myevent);
         }
     },
     

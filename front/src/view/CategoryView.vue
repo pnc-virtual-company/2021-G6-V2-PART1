@@ -41,7 +41,7 @@
             <base-button :class="classButton"
             @click="onConfirm"
             >
-            {{dialogButton}}
+            {{dialogButton}} 
             </base-button>
             
           </template>
