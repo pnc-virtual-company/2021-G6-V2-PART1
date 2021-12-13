@@ -34,19 +34,12 @@
                         />
                       </div>
                     </div>
-                    <div v-if="imageToEdt === 'edit' ">
-                      <div>
-                        <img
-                          :src="url + imagepreview"
-                          class="img-fluid"
-                          alt=""
-                        />
-                      </div>
+                    <div v-if="dialogMode !== 'edit' ">
+                      <label >Image</label>
+                      <input id="image" type="file" hidden class="form-control mr-3" @change="imageSeleted"/>
+                      <label for="image" class="fa fa-image btn btn-outline-primary p-3"></label>
                     </div>
                       
-                    <label >Image</label>
-                    <input id="image" type="file" hidden class="form-control mr-3" @change="imageSeleted"/>
-                    <label for="image" class="fa fa-image btn btn-outline-primary p-3"></label>
                   </div>
                   <div class="form-group col-sm-12">
                     <label for="category">Category</label>

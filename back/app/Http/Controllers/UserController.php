@@ -47,7 +47,7 @@ class UserController extends Controller
 
         //check password
         if(!$user || !Hash::check($request->password, $user->password)){
-            return response()->json(['message' => false]);
+            return response()->json(['message' => 'fail']);
         }
 
         return response()->json([

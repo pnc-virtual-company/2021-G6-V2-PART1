@@ -100,7 +100,7 @@ export default {
         this.$router.push('/my-event');
       }
     };
-
+  
     if (localStorage.userId) {
       this.$router.push('/my-event');
       axios.get('/users/' + localStorage.userId)
