@@ -11,14 +11,115 @@
         >
         <strong>{{ message }}</strong>
       </div>
+
+<!-- ################################ DIALOG FORM ##################################### -->
+
       <div class="d-flex justify-content-between mb-3">
-        <h2 class="text-info">My Events</h2>
+        <h2 class="h2">My Events</h2>
         <base-dailog
           v-if="dialogDisplayed" 
           :title="dialogTitle"
           @close="closeDialog"
         >
-          <div class="event-form" v-if="dialogMode !== 'remove'">
+          <div v-if="dialogMode !== 'remove'">
+              <div class="event-form">
+                <div class="form-row">
+                  <div class="form-group col-sm-12">
+                    <div v-if="imageToEdt === 'create' ">
+                      <div v-if="imagepreview">
+                        <img
+                          :src="imagepreview"
+                          class="img-fluid"
+                          alt=""
+                        />
+                      </div>
+                    </div>
+                    <div v-if="imageToEdt === 'edit' ">
+                      <div>
+                        <img
+                          :src="url + imagepreview"
+                          class="img-fluid"
+                          alt=""
+                        />
+                      </div>
+                    </div>
+                      
+                    <label >Image</label>
+                    <input id="image" type="file" hidden class="form-control mr-3" @change="imageSeleted"/>
+                    <label for="image" class="fa fa-image btn btn-outline-primary p-3"></label>
+                  </div>
+                  <div class="form-group col-sm-12">
+                    <label for="category">Category</label>
+                    
+                    <select name="category" id="category" class="form-control" v-model="event_data.categoryId">
+                      <option v-for="category of categories" :key="category.id" :value="category.id"> {{category.name}} </option>
+                    </select>
+                  </div>
+                  <div class="form-group col-sm-12">
+                    <label for="title">Title</label>
+                    <input
+                      type="text"
+                      id="title"
+                      class="form-control"
+                      placeholder="Title"
+                      v-model="event_data.title"
+                    />
+                  </div>
+                  <div class="form-group col-sm-6">
+                    <label for="startDate">Start date and time</label>
+                    <input
+                      type="datetime-local"
+                      id="startDate"
+                      class="form-control"
+                      v-model="event_data.start_date"
+                    />
+                  </div>
+                  <div class="form-group col-sm-6">
+                    <label for="endDate">End date and time</label>
+                    <input
+                      type="datetime-local"
+                      id="endDate"
+                      class="form-control"
+                      v-model="event_data.end_date"
+                    />
+                  </div>
+                  <div class="form-group col-sm-6">
+                    <label for="contry">Country</label>
+                    <input
+                      list="countryList"
+                      class="form-control"
+                      placeholder="Select city"
+                      v-model="event_data.country"
+                    />
+                    <datalist id="countryList">
+                      <option v-for="name of countryName" :key="name" class="form-control">{{name}}</option>
+                    </datalist>
+                  </div>
+                  <div class="form-group col-sm-6">
+                    <label for="city">City</label>
+                    <input
+                      list="cityList"
+                      class="form-control"
+                      placeholder="Select city"
+                      v-model="event_data.city"
+                    />
+                    <datalist id="cityList">
+                      <option v-for="city of countries[event_data.country]" :key="city" class="form-control">{{city}}</option>
+                    </datalist>
+                  </div>
+                  <div class="form-group col-sm-12">
+                    <label for="description">Description</label>
+                    <textarea
+                      id="description"
+                      class="form-control"
+                      placeholder="Description"
+                      v-model="event_data.description"
+                    ></textarea>
+                  </div>
+                </div>
+              </div>
+          </div>
+          <!-- <div class="event-form" v-if="dialogMode !== 'remove'">
             <div class="form-row">
               <div class="form-group col-sm-12">
                 <div v-if="imageToEdt === 'create' ">
@@ -43,7 +144,10 @@
                 <label >Image</label>
                 <input id="image" type="file" hidden class="form-control mr-3" @change="imageSeleted"/>
                 <label for="image" class="fa fa-image btn btn-outline-primary p-3"></label>
-              </div>
+              </div> -->
+          <!-- </div> -->
+          <!-- <div v-else>
+            <h5>Are you sure you want to remove this event?</h5>
               <div class="form-group col-sm-12">
                 <label for="category">Category</label>
                 <select id="category" v-model="event_data.categoryId" class="form-control">
@@ -114,7 +218,7 @@
                 ></textarea>
               </div>
             </div>
-          </div>
+          </div> -->
           <div v-else>
             <h5>Are you sure you want to remove this event?</h5>
           </div>
@@ -139,16 +243,24 @@
 
       <hr class="bg-dark pb-1">
 
-      <my-event-search 
-        @addSearchEvent="searchEvent"
-        :cities="cities" > 
-      </my-event-search>
-      <my-event-card class="mt-3" v-for="event of my_events" 
-        :key="event.id" 
-        :event="event"  
-        @requestRemove="showDeleteDialog"
-        @requestEdit="showEditForm"
-      > </my-event-card>
+<!-- ################################ MY EVENT FORM SEARCH ##################################### -->
+
+      <my-event-search
+      @searchName="searchEvent"
+      > </my-event-search>
+
+<!-- ################################ MY EVENT CARD ##################################### -->
+      <my-event-card 
+      v-for="event of my_events" :key="event.id" 
+      :event="event" 
+      :buttonMode="myEventMode"
+      class="mt-3"
+      @requestToDelete="showDeleteForm"
+      @requestToEdt="showEditForm"
+      > 
+      </my-event-card>
+
+
     </div>
   </section>
 </template>
@@ -190,10 +302,10 @@ export default {
       categories: [],
       countries: {},
       countryName: [],
-      cities: [],
-      defaultImage: "../assets/download.jpg",
-      image: null,
+      defaultImage: "../assets/null.png",
+      image: "",
       imagepreview: null,
+      myEventMode: 'myEvent',
 
       messageError:{
         image_error: "",
@@ -212,6 +324,7 @@ export default {
     };
   },
   computed: {
+//############################################# GET DIALOG TITLE ############################################
     dialogTitle() {
       let message = "";
       if (this.dialogMode === "create") {
@@ -223,6 +336,7 @@ export default {
       }
       return message;
     },
+//############################################# GET DIALOG BUTTON NAME ############################################
     dialogButton() {
       let message = "";
       if (this.dialogMode === "create") {
@@ -234,6 +348,8 @@ export default {
       }
       return message;
     },
+
+//############################################# GET DIALOG BUTTON CLASS STYLE ############################################
     classButton() {
       let message = "";
       if (this.dialogMode === "create") {
@@ -247,22 +363,28 @@ export default {
     },
   },
   methods: {
-
-// ####################################   GET MY EVENTS   ###############################
+//############################################# GET MY EVENTS ############################################
     getMyEvent() {
       axios.get('/myevent')
       .then(response => {
-          this.my_events = response.data
-          // console.log(this.my_events);
+        this.my_events = response.data.filter((event) => event.user_id === parseInt(localStorage.getItem('userId')));
       })
     },
-// ####################################   SHOW CREATE FORM WHEN CLICK ON ADD EVENT ########################
+//############################################# SHOW CREATE MY EVENT FORM ############################################
     showCreateMyEvent() {
       this.dialogMode = "create";
       this.dialogDisplayed = true;
       this.imagepreview = null;
     },
-// ####################################   SHOW CREATE FORM WHEN CLICK ON ADD EVENT ########################
+//############################################# SHOW DELETE MY EVENT DIALOG ############################################
+    showDeleteForm(id) {
+      this.dialogMode = "remove";
+      this.dialogDisplayed = true;
+      this.myEventAction = {
+        id: id
+      }
+    },
+// #################################### SHOW CREATE FORM WHEN CLICK ON ADD EVENT ########################
     showEditForm(eventData) {
       this.imageToEdt = 'edit';
       this.dialogMode = 'edit';
@@ -293,19 +415,19 @@ export default {
     },
 
 // #################################### UPDATE EVENT FUNCTION ########################
-  updateMyEvent(previousData) {
-    
-    let myNewEventData = {
-      user_id: previousData.user_id,
-      category_id: this.event_data.categoryId,
-      title: this.event_data.title,
-      description: this.event_data.description,
-      country: this.event_data.country,
-      city: this.event_data.city,
-      start_date: this.event_data.start_date,
-      end_date: this.event_data.end_date,
-    }
+    updateMyEvent(previousData) {
       
+      let myNewEventData = {
+        user_id: previousData.user_id,
+        category_id: this.event_data.categoryId,
+        title: this.event_data.title,
+        description: this.event_data.description,
+        country: this.event_data.country,
+        city: this.event_data.city,
+        start_date: this.event_data.start_date,
+        end_date: this.event_data.end_date,
+      }
+        
       axios.put("/myevent/" + previousData.id, myNewEventData)
       .then(res => {
         
@@ -358,8 +480,7 @@ export default {
       });
       
       this.isShowMessage = true;
-  },
-
+    },
 // ################################### CLOSE FORM FUNCTION ##################################
 
     closeDialog() {
@@ -385,25 +506,6 @@ export default {
         id: id
       }
     },
-
-// SEARCH BY TITLE AND BY CITY ========================================================================================
-
-  searchEvent(searchByText, city){
-    if (searchByText !== ""){
-      this.my_events = this.my_events.filter(events => 
-      ((events.title.toLowerCase().includes(searchByText.toLowerCase())) 
-      ||(events.description.toLowerCase().includes(searchByText.toLowerCase())) 
-      ||(events.category.name.toLowerCase().includes(searchByText.toLowerCase()))) 
-      && (events.city === city));
-
-      console.log(this.my_events);
-
-    }else{
-      this.getMyEvent();
-    }
-  },
-
-  // Add Event Card===================================================================
 // ################################# DELETE MY EVENT FUNCTION ########################################
     deleteMyEvent(id) {
       this.isShowMessage = true;
@@ -431,7 +533,7 @@ export default {
       myEventData.append('end_date', this.event_data.end_date);
      
       myEventData.append('image', this.image);
-       console.log(myEventData);
+      console.log(myEventData);
 
       axios.post("/myevent", myEventData)
       .then(res => {
@@ -499,6 +601,20 @@ export default {
         this.imagepreview = e.target.result;
       };
     },
+
+// ####################################### REMOVE MYEVENT BY ID FUNCTION ####################################################
+    removeMyEvent(id) {
+      this.isShowMessage = true;
+      axios.delete('/myevent/' + id)
+      .then((response) => {
+        this.my_events = this.my_events.filter(event => event.id !== id);
+        this.showMessage = response.data.message;
+        this.message = "Delete successfully";
+        this.myClass = "alert-success";
+        this.myMessage = "Deleted";
+      })
+    },
+
 // ####################################### ON CONFIRM FUNCTION ####################################################
     onConfirm() {
       if(this.dialogMode === 'create') {
@@ -511,16 +627,30 @@ export default {
 
       this.closeDialog();
     },
+
+// ####################################### SEARCH EVENT BY TITLE FUNCTION ####################################################    
+    searchEvent(name) {
+      if(name !== "") {
+        axios.get('/myevent/search/' + name)
+        .then(res => {
+          this.my_events = res.data.filter(event => event.user_id === parseInt(localStorage.getItem("userId")));
+        })
+      } else {
+        this.getMyEvent();
+      }
+    }
   },
 
   mounted() {
 // ###################################### CALL GET MY EVENT FUNCTION ##############################################
     this.getMyEvent();
+
 // ##################################### GET CATEGORY FORM BACKEND ################################################
     axios.get('/category')
     .then(res => {
       this.categories = res.data
     })
+
 // #################################### GET COUNTRY FROM BACKEND ##################################################
     axios.get('/countries')
     .then(res => {
@@ -528,38 +658,36 @@ export default {
         for(let count in res.data) {
           this.countryName.push(count);
         }
-       
-      
-    });
-
-    axios.get('/cities').then(response=>{
-      for(let city of response.data.cities){
-        this.cities.push(city);
-      }
- 
     })
-  
+// ###################################  GET CATEGORY FROM BACKEND ##################################################
+    axios.get('/category')
+    .then(res => {
+        this.categories = res.data
+    })
+    
   },
-};
+}
 </script>
 
 <style scoped>
+  label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+  .event-form {
+    width: 100%;
+    height: 45vh;
+    padding: 20px;
+    overflow-y: scroll;
+  }
 
-label {
-  font-weight: bold;
-  display: block;
-  margin-bottom: 0.5rem;
-}
-.event-form {
-  width: 100%;
-  height: 45vh;
-  padding: 20px;
-  overflow-y: scroll;
-}
+  h3 {
+    margin: 0.5rem 0;
+    font-size: 1rem;
+  }
 
-
-h3 {
-  margin: 0.5rem 0;
-  font-size: 1rem;
-}
+  #h2{
+    color:  #020269;
+  }
 </style>

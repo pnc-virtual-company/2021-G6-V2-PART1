@@ -18,10 +18,7 @@
       </button>
 
       <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
-        <ul class="navbar-nav m-auto mt-2 mt-lg-0">
-          <li class="nav-item active">
-            <router-link to="/home" class="nav-link text-white menu-page">Home <span class="sr-only ">(current)</span></router-link>
-          </li>
+        <ul class="navbar-nav ml-auto m-auto mt-lg-0">
           <li class="nav-item">
             <router-link to="/my-event" class="nav-link text-white menu-page">My Events</router-link>
           </li>
@@ -76,6 +73,7 @@ body {
 
 .router-link-active {
     text-decoration: 3px underline white;
+    /* background: blue; */
     border-radius: 2px;
 }
 
